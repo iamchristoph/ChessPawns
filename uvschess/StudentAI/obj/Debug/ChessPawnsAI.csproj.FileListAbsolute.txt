@@ -1,0 +1,5 @@
+C:\Users\Christopher\Documents\CS-4470\uvschess\ChessPawns\uvschess\Framework\bin\Debug\StudentAI.dll
+C:\Users\Christopher\Documents\CS-4470\uvschess\ChessPawns\uvschess\Framework\bin\Debug\StudentAI.pdb
+C:\Users\Christopher\Documents\CS-4470\uvschess\ChessPawns\uvschess\StudentAI\obj\Debug\ChessPawnsAI.csprojResolveAssemblyReference.cache
+C:\Users\Christopher\Documents\CS-4470\uvschess\ChessPawns\uvschess\StudentAI\obj\Debug\StudentAI.dll
+C:\Users\Christopher\Documents\CS-4470\uvschess\ChessPawns\uvschess\StudentAI\obj\Debug\StudentAI.pdb

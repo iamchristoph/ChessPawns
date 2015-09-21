@@ -66,13 +66,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="StudentAI.cs" />
+    <Compile Include="ChessPawnsAI.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Framework\Framework.2010.csproj">
       <Project>{BE8F4EFB-458E-431A-A763-5988804DC0ED}</Project>
-      <Name>Framework</Name>
+      <Name>Framework.2010</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

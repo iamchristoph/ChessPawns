@@ -1,10 +1,12 @@
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.31101.0
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Framework.2010", "Framework\Framework.2010.csproj", "{BE8F4EFB-458E-431A-A763-5988804DC0ED}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExampleAI.2010", "ExampleAI\ExampleAI.2010.csproj", "{5B942207-A326-4144-850C-CA867E22721A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StudentAI.2010", "StudentAI\StudentAI.2010.csproj", "{5B942208-A326-4144-850C-CA867E22721A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ChessPawnsAI", "StudentAI\ChessPawnsAI.csproj", "{5B942208-A326-4144-850C-CA867E22721A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Text;
 using UvsChess;
 
-namespace StudentAI
+namespace ChessPawnsAI
 {
-    public class StudentAI : IChessAI
+    public class ChessPawnsAI : IChessAI
     {
         #region IChessAI Members that are implemented by the Student
 
@@ -15,9 +15,9 @@ namespace StudentAI
         public string Name
         {
 #if DEBUG
-            get { return "StudentAI (Debug)"; }
+            get { return "ChessPawnsAI (Debug)"; }
 #else
-            get { return "StudentAI"; }
+            get { return "ChessPawnsAI"; }
 #endif
         }
 
@@ -56,23 +56,28 @@ namespace StudentAI
         /// <returns>list of possible Moves</returns>
         public List<ChessMove> GetAllMoves(ChessBoard board, ChessColor myColor)
         {
-            List<ChessMove> moves = new List<ChessMove>();
+            List<ChessMove> moves = new List<ChessMove>(); // a list to hold our moves
             for (int i = 0; i < 8; i++ )
             {
                 for (int j = 0; j < 8; j++)
                 {
                     ChessLocation location = new ChessLocation(i, j);
-                    moves.Add(GetMove(board, location, myColor));
+                    moves.AddRange(GetMove(board, location, myColor)); // for each location add the valid moves
                 }
             }
             return moves;
         }
 
-        public ChessMove GetMove(ChessBoard board, ChessLocation location, ChessColor myColor)
+
+        public List<ChessMove> GetMove(ChessBoard board, ChessLocation location, ChessColor myColor)
         {
             ChessPiece myPiece = board[location];
+            List<ChessMove> moves = new List<ChessMove>();
+            // I noticed that for each peice there may be several possible moves available so this 
+            // will need to change accordingly.
             ChessMove move = new ChessMove(location, /*to*/location);
-            return move;
+            moves.Add(move);
+            return moves;
         }
 
         /// <summary>
