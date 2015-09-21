@@ -1,0 +1,12 @@
+C:\Users\Christopher\Documents\GitHub\uvschess\uvschess\Framework\bin\Debug\UvsChess.exe
+C:\Users\Christopher\Documents\GitHub\uvschess\uvschess\Framework\bin\Debug\UvsChess.pdb
+C:\Users\Christopher\Documents\GitHub\uvschess\uvschess\Framework\obj\Debug\Framework.2010.csprojResolveAssemblyReference.cache
+C:\Users\Christopher\Documents\GitHub\uvschess\uvschess\Framework\obj\Debug\UvsChess.Gui.GuiChessBoard.resources
+C:\Users\Christopher\Documents\GitHub\uvschess\uvschess\Framework\obj\Debug\UvsChess.Gui.WinGui.resources
+C:\Users\Christopher\Documents\GitHub\uvschess\uvschess\Framework\obj\Debug\UvsChess.Gui.AboutUvsChess.resources
+C:\Users\Christopher\Documents\GitHub\uvschess\uvschess\Framework\obj\Debug\UvsChess.Gui.Preferences.resources
+C:\Users\Christopher\Documents\GitHub\uvschess\uvschess\Framework\obj\Debug\UvsChess.Gui.GuiDecisionTree.resources
+C:\Users\Christopher\Documents\GitHub\uvschess\uvschess\Framework\obj\Debug\UvsChess.Gui.MessageBox.resources
+C:\Users\Christopher\Documents\GitHub\uvschess\uvschess\Framework\obj\Debug\Framework.2010.csproj.GenerateResource.Cache
+C:\Users\Christopher\Documents\GitHub\uvschess\uvschess\Framework\obj\Debug\UvsChess.exe
+C:\Users\Christopher\Documents\GitHub\uvschess\uvschess\Framework\obj\Debug\UvsChess.pdb
