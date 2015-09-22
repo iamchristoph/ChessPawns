@@ -82,6 +82,9 @@ namespace ChessPawnsAI
                 {
                     case ChessPiece.WhitePawn:
                         {
+<<<<<<< HEAD
+                            moves.AddRange(GetWhitePawnMoves(board, location));
+=======
                             //set locationweretesting to some valid move for white pawn
                             //is this the first move for this pawn?
                             if (location.Y == 6)
@@ -113,26 +116,32 @@ namespace ChessPawnsAI
                             }
                             //    ChessMove move = new ChessMove(location, );
                             //moves.Add(move);
+>>>>>>> origin/master
                             break;
                         }
                     case ChessPiece.WhiteBishop:
                         {
+                            moves.AddRange(GetBishopMoves(board, location, myColor));
                             break;
                         }
                     case ChessPiece.WhiteKnight:
                         {
+                            moves.AddRange(GetKnightMoves(board, location, myColor));
                             break;
                         }
                     case ChessPiece.WhiteRook:
                         {
+                            moves.AddRange(GetRookeMoves(board, location, myColor));
                             break;
                         }
                     case ChessPiece.WhiteQueen:
                         {
+                            moves.AddRange(GetQueenMoves(board, location, myColor));
                             break;
                         }
                     case ChessPiece.WhiteKing:
                         {
+                            moves.AddRange(GetKingMoves(board, location, myColor));
                             break;
                         }
                 }
@@ -143,12 +152,38 @@ namespace ChessPawnsAI
                 switch (myPiece)
                 {
                     case ChessPiece.BlackPawn:
-                        { break; }
+                        {
+                            moves.AddRange(GetBlackPawnMoves(board, location));
+                            break; 
+                        }
+                    case ChessPiece.BlackBishop:
+                        {
+                            moves.AddRange(GetBishopMoves(board, location, myColor));
+                            break;
+                        }
+                    case ChessPiece.BlackKnight:
+                        {
+                            moves.AddRange(GetKnightMoves(board, location, myColor));
+                            break;
+                        }
+                    case ChessPiece.BlackRook:
+                        {
+                            moves.AddRange(GetRookeMoves(board, location, myColor));
+                            break;
+                        }
+                    case ChessPiece.BlackQueen:
+                        {
+                            moves.AddRange(GetQueenMoves(board, location, myColor));
+                            break;
+                        }
+                    case ChessPiece.BlackKing:
+                        {
+                            moves.AddRange(GetKingMoves(board, location, myColor));
+                            break;
+                        }
                 }
             }
             //do the rest of the moves here. 
-            // I noticed that for each peice there may be several possible moves available so this 
-            // will need to change accordingly.
 
             return moves;
         }
@@ -168,7 +203,52 @@ namespace ChessPawnsAI
 
         #endregion
 
+        #region Get moves functions by piece
+        List<ChessMove> GetWhitePawnMoves(ChessBoard board, ChessLocation location)
+        {
+            List<ChessMove> moves = new List<ChessMove>();
+            ChessLocation testLocation;
+            //set locationweretesting to some valid move for white pawn
+            //is this the first move for this pawn?
+            if (location.Y == 6)
+            {
+                ChessMove move = new ChessMove(location, new ChessLocation(location.X, 4));
+                moves.Add(move);
+            }
+            //is there a piece in front of you?
+            testLocation = new ChessLocation(location.X, location.Y + 1);
+            if (board[testLocation] == ChessPiece.Empty)
+            {
+                //no theres not. 
+                ChessMove move = new ChessMove(location, testLocation);
+                moves.Add(move);
+            }
 
+            //is there a piece to either of your diagonals?
+            testLocation = new ChessLocation(location.X - 1, location.Y + 1);
+            if (board[testLocation] < ChessPiece.Empty)
+            {
+                ChessMove move = new ChessMove(location, testLocation);
+                moves.Add(move);
+            }
+            testLocation = new ChessLocation(location.X + 1, location.Y + 1);
+            if (board[testLocation] < ChessPiece.Empty)
+            {
+                ChessMove move = new ChessMove(location, testLocation);
+                moves.Add(move);
+            }
+            //    ChessMove move = new ChessMove(location, );
+            //moves.Add(move);
+            return moves;
+        }
+        List<ChessMove> GetBlackPawnMoves(ChessBoard board, ChessLocation location) { return new List<ChessMove>(); }
+        List<ChessMove> GetBishopMoves(ChessBoard board, ChessLocation location, ChessColor myColor) { return new List<ChessMove>(); }
+        List<ChessMove> GetKnightMoves(ChessBoard board, ChessLocation location, ChessColor myColor) { return new List<ChessMove>(); }
+        List<ChessMove> GetRookeMoves(ChessBoard board, ChessLocation location, ChessColor myColor) { return new List<ChessMove>(); }
+        List<ChessMove> GetQueenMoves(ChessBoard board, ChessLocation location, ChessColor myColor) { return new List<ChessMove>(); }
+        List<ChessMove> GetKingMoves(ChessBoard board, ChessLocation location, ChessColor myColor) { return new List<ChessMove>(); }
+
+        #endregion
 
 
 
