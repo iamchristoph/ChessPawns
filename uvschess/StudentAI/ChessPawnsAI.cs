@@ -73,7 +73,7 @@ namespace ChessPawnsAI
         {
             ChessPiece myPiece = board[location];
             //init a new location so we can have somethign to write to. 
-            ChessLocation testLocation;
+
             List<ChessMove> moves = new List<ChessMove>();
             //first well need to figure out what kind of piece was passed in 
             if (myColor == ChessColor.White)
@@ -82,41 +82,8 @@ namespace ChessPawnsAI
                 {
                     case ChessPiece.WhitePawn:
                         {
-<<<<<<< HEAD
-                            moves.AddRange(GetWhitePawnMoves(board, location));
-=======
-                            //set locationweretesting to some valid move for white pawn
-                            //is this the first move for this pawn?
-                            if (location.Y == 6)
-                            {
-                                ChessMove move = new ChessMove(location, new ChessLocation(location.X, 4));
-                                moves.Add(move);
-                            }
-                            //is there a piece in front of you?
-                            testLocation = new ChessLocation(location.X, location.Y + 1);
-                            if(board[testLocation] == ChessPiece.Empty)
-                            {
-                                //no theres not. 
-                                ChessMove move = new ChessMove(location, testLocation);
-                                moves.Add(move);
-                            }
 
-                            //is there a piece to either of your diagonals?
-                            testLocation = new ChessLocation(location.X - 1, location.Y + 1);
-                            if(board[testLocation] < ChessPiece.Empty)
-                            {
-                                ChessMove move = new ChessMove(location, testLocation);
-                                moves.Add(move);
-                            }
-                            testLocation = new ChessLocation(location.X + 1, location.Y + 1);
-                            if(board[testLocation] < ChessPiece.Empty)
-                            {
-                                ChessMove move = new ChessMove(location, testLocation);
-                                moves.Add(move);
-                            }
-                            //    ChessMove move = new ChessMove(location, );
-                            //moves.Add(move);
->>>>>>> origin/master
+                            moves.AddRange(GetWhitePawnMoves(board, location));
                             break;
                         }
                     case ChessPiece.WhiteBishop:
@@ -207,6 +174,7 @@ namespace ChessPawnsAI
         List<ChessMove> GetWhitePawnMoves(ChessBoard board, ChessLocation location)
         {
             List<ChessMove> moves = new List<ChessMove>();
+
             ChessLocation testLocation;
             //set locationweretesting to some valid move for white pawn
             //is this the first move for this pawn?
