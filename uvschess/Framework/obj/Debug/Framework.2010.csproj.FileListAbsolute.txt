@@ -12,3 +12,16 @@ C:\Users\Christopher\Documents\GitHub\uvschess\uvschess\Framework\obj\Debug\UvsC
 C:\Users\Christopher\Documents\GitHub\uvschess\uvschess\Framework\obj\Debug\UvsChess.pdb
 C:\Users\Christopher\Documents\CS-4470\uvschess\ChessPawns\uvschess\Framework\obj\Debug\UvsChess.exe
 C:\Users\Christopher\Documents\CS-4470\uvschess\ChessPawns\uvschess\Framework\obj\Debug\UvsChess.pdb
+C:\Users\testicon\Source\Repos\chesspawns\uvschess\Framework\bin\Debug\UvsChess.exe.config
+C:\Users\testicon\Source\Repos\chesspawns\uvschess\Framework\obj\Debug\UvsChess.exe
+C:\Users\testicon\Source\Repos\chesspawns\uvschess\Framework\obj\Debug\UvsChess.pdb
+C:\Users\testicon\Source\Repos\chesspawns\uvschess\Framework\bin\Debug\UvsChess.exe
+C:\Users\testicon\Source\Repos\chesspawns\uvschess\Framework\bin\Debug\UvsChess.pdb
+C:\Users\testicon\Source\Repos\chesspawns\uvschess\Framework\obj\Debug\Framework.2010.csprojResolveAssemblyReference.cache
+C:\Users\testicon\Source\Repos\chesspawns\uvschess\Framework\obj\Debug\UvsChess.Gui.GuiChessBoard.resources
+C:\Users\testicon\Source\Repos\chesspawns\uvschess\Framework\obj\Debug\UvsChess.Gui.WinGui.resources
+C:\Users\testicon\Source\Repos\chesspawns\uvschess\Framework\obj\Debug\UvsChess.Gui.AboutUvsChess.resources
+C:\Users\testicon\Source\Repos\chesspawns\uvschess\Framework\obj\Debug\UvsChess.Gui.Preferences.resources
+C:\Users\testicon\Source\Repos\chesspawns\uvschess\Framework\obj\Debug\UvsChess.Gui.GuiDecisionTree.resources
+C:\Users\testicon\Source\Repos\chesspawns\uvschess\Framework\obj\Debug\UvsChess.Gui.MessageBox.resources
+C:\Users\testicon\Source\Repos\chesspawns\uvschess\Framework\obj\Debug\Framework.2010.csproj.GenerateResource.Cache

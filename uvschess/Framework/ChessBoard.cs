@@ -43,7 +43,7 @@ namespace UvsChess
         public const int NumberOfColumns = 8;
         #endregion
 
-        #region private automatic properties
+        //#region private automatic properties
         private ChessPiece[,] Board { get; set; }
         #endregion
 

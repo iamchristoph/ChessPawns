@@ -72,11 +72,71 @@ namespace ChessPawnsAI
         public List<ChessMove> GetMove(ChessBoard board, ChessLocation location, ChessColor myColor)
         {
             ChessPiece myPiece = board[location];
+            //init a new location so we can have somethign to write to. 
+            
             List<ChessMove> moves = new List<ChessMove>();
+            //first well need to figure out what kind of piece was passed in 
+            if (myColor == ChessColor.White)
+            {
+                switch (myPiece)
+                {
+                    case ChessPiece.WhitePawn:
+                        {
+                            //set locationweretesting to some valid move for white pawn
+                            //is this the first move for this pawn?
+                            if (location.Y == 6)
+                            {
+                                ChessMove move = new ChessMove(location, new ChessLocation(location.X, 4));
+                                moves.Add(move);
+                            }
+                                //is there a piece in front of you?
+                                
+                                //is there a piece to either of your diagonals?
+
+
+                                //possibly add if theres a risk of capture
+
+
+
+                            //    ChessMove move = new ChessMove(location, );
+                            //moves.Add(move);
+                            break;
+                        }
+                    case ChessPiece.WhiteBishop:
+                        {
+                            break;
+                        }
+                    case ChessPiece.WhiteKnight:
+                        {
+                            break;
+                        }
+                    case ChessPiece.WhiteRook:
+                        {
+                            break;
+                        }
+                    case ChessPiece.WhiteQueen:
+                        {
+                            break;
+                        }
+                    case ChessPiece.WhiteKing:
+                        {
+                            break;
+                        }
+                }
+            }
+
+            else //my color is Black
+            {
+                switch (myPiece)
+                {
+                    case ChessPiece.BlackPawn:
+                        { break; }
+                }
+            }
+            //do the rest of the moves here. 
             // I noticed that for each peice there may be several possible moves available so this 
             // will need to change accordingly.
-            ChessMove move = new ChessMove(location, /*to*/location);
-            moves.Add(move);
+
             return moves;
         }
 
