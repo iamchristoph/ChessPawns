@@ -284,7 +284,82 @@ namespace ChessPawnsAI
             }
             return moves;
         }
-        List<ChessMove> GetKnightMoves(ChessBoard board, ChessLocation location, ChessColor myColor) { return new List<ChessMove>(); }
+        List<ChessMove> GetKnightMoves(ChessBoard board, ChessLocation location, ChessColor myColor) 
+        { 
+
+            List<ChessMove> moves = new List<ChessMove>();
+            int x = location.X, y = location.Y; 
+
+            // get right 2, up, down 1
+            if (x + 2 < 8)
+            {//can go right 2 and stay on board
+                if (y + 1 < 8) // can go down 1 and stay on board
+                {
+                    ChessPiece piece = board[x+2, y+1];
+                    if (piece == ChessPiece.Empty || Color(piece) != myColor) //space is empty or opponent I can go there
+                        moves.Add(new ChessMove(location, new ChessLocation(x + 2, y + 1)));
+                }
+                if (y - 1 >= 0) // can go up 1 and stay on board
+                {
+                    ChessPiece piece = board[x + 2, y - 1];
+                    if (piece == ChessPiece.Empty || Color(piece) != myColor) //space is empty or opponent I can go there
+                        moves.Add(new ChessMove(location, new ChessLocation(x + 2, y - 1)));
+                }
+            }
+
+            // get right 1, up, down 2
+            if (x + 1 < 8)
+            {//can go right 1 and stay on board
+                if (y + 2 < 8) // can go up 2 and stay on board
+                {
+                    ChessPiece piece = board[x + 1, y + 2];
+                    if (piece == ChessPiece.Empty || Color(piece) != myColor) //space is empty or opponent I can go there
+                        moves.Add(new ChessMove(location, new ChessLocation(x + 1, y + 2)));
+                }
+                if (y - 2 >= 0) // can go up 1 and stay on board
+                {
+                    ChessPiece piece = board[x + 1, y - 2];
+                    if (piece == ChessPiece.Empty || Color(piece) != myColor) //space is empty or opponent I can go there
+                        moves.Add(new ChessMove(location, new ChessLocation(x + 1, y - 2)));
+                }
+            }
+
+            // get left 2, up, down 1
+            if (x - 2 >= 0)
+            {//can go left 2 and stay on board
+                if (y + 1 < 8) // can go down 1 and stay on board
+                {
+                    ChessPiece piece = board[x - 2, y + 1];
+                    if (piece == ChessPiece.Empty || Color(piece) != myColor) //space is empty or opponent I can go there
+                        moves.Add(new ChessMove(location, new ChessLocation(x - 2, y + 1)));
+                }
+                if (y - 1 >= 0) // can go up 1 and stay on board
+                {
+                    ChessPiece piece = board[x - 2, y - 1];
+                    if (piece == ChessPiece.Empty || Color(piece) != myColor) //space is empty or opponent I can go there
+                        moves.Add(new ChessMove(location, new ChessLocation(x - 2, y - 1)));
+                }
+            }
+
+            // get left 1, up, down 2
+            if (x - 1 >= 0)
+            {//can go left 1 and stay on board
+                if (y + 2 < 8) // can go down 1 and stay on board
+                {
+                    ChessPiece piece = board[x - 1, y + 2];
+                    if (piece == ChessPiece.Empty || Color(piece) != myColor) //space is empty or opponent I can go there
+                        moves.Add(new ChessMove(location, new ChessLocation(x - 1, y + 2)));
+                }
+                if (y - 2 >= 0) // can go up 1 and stay on board
+                {
+                    ChessPiece piece = board[x - 1, y - 2];
+                    if (piece == ChessPiece.Empty || Color(piece) != myColor) //space is empty or opponent I can go there
+                        moves.Add(new ChessMove(location, new ChessLocation(x - 1, y - 2)));
+                }
+            }
+
+            return moves;
+        }
 
         List<ChessMove> GetRookeMoves(ChessBoard board, ChessLocation location, ChessColor myColor) 
         {
@@ -296,8 +371,7 @@ namespace ChessPawnsAI
                     moves.Add(new ChessMove(location, new ChessLocation(location.X, dY)));
                 else if (Color(board[location.X, dY]) == myColor)
                     break;  // if we get to a filled space, we can quit going down this path
-
-                if (board[location.X, dY] != ChessPiece.Empty && Color(board[location.X, dY]) != myColor)
+                else // it is opponent peice take it.
                 {
                     moves.Add(new ChessMove(location, new ChessLocation(location.X, dY)));
                     break;  // take the opponents piece and end searching this path
@@ -310,8 +384,7 @@ namespace ChessPawnsAI
                     moves.Add(new ChessMove(location, new ChessLocation(location.X, dY)));
                 else if (Color(board[location.X, dY]) == myColor)
                     break;  // if we get to a filled space, we can quit going down this path
-
-                if (board[location.X, dY] != ChessPiece.Empty && Color(board[location.X, dY]) != myColor)
+                else // is opponent piece take it.
                 {
                     moves.Add(new ChessMove(location, new ChessLocation(location.X, dY)));
                     break;  // take the opponents piece and end searching this path
