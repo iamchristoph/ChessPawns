@@ -184,7 +184,7 @@ namespace ChessPawnsAI
                 moves.Add(move);
             }
             //is there a piece in front of you?
-            testLocation = new ChessLocation(location.X, location.Y + 1);
+            testLocation = new ChessLocation(location.X, location.Y - 1);
             if (board[testLocation] == ChessPiece.Empty)
             {
                 //no theres not. 
@@ -193,13 +193,13 @@ namespace ChessPawnsAI
             }
 
             //is there a piece to either of your diagonals?
-            testLocation = new ChessLocation(location.X - 1, location.Y + 1);
+            testLocation = new ChessLocation(location.X - 1, location.Y - 1);
             if (board[testLocation] < ChessPiece.Empty)
             {
                 ChessMove move = new ChessMove(location, testLocation);
                 moves.Add(move);
             }
-            testLocation = new ChessLocation(location.X + 1, location.Y + 1);
+            testLocation = new ChessLocation(location.X + 1, location.Y - 1);
             if (board[testLocation] < ChessPiece.Empty)
             {
                 ChessMove move = new ChessMove(location, testLocation);
@@ -220,7 +220,7 @@ namespace ChessPawnsAI
                 moves.Add(move);
             }
             //is there a piece in front of you?
-            testLocation = new ChessLocation(location.X, location.Y - 1);
+            testLocation = new ChessLocation(location.X, location.Y + 1);
             if (board[testLocation] == ChessPiece.Empty)
             {
                 //no theres not. 
@@ -229,14 +229,14 @@ namespace ChessPawnsAI
             }
 
             //is there a piece to either of your diagonals?
-            testLocation = new ChessLocation(location.X - 1, location.Y - 1);
+            testLocation = new ChessLocation(location.X - 1, location.Y + 1);
             //> here because all white pieces are > empty
             if (board[testLocation] > ChessPiece.Empty)
             {
                 ChessMove move = new ChessMove(location, testLocation);
                 moves.Add(move);
             }
-            testLocation = new ChessLocation(location.X + 1, location.Y - 1);
+            testLocation = new ChessLocation(location.X + 1, location.Y + 1);
             if (board[testLocation] > ChessPiece.Empty)
             {
                 ChessMove move = new ChessMove(location, testLocation);
