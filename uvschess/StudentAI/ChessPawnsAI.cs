@@ -355,11 +355,7 @@ namespace ChessPawnsAI
         {
             // queen is combination of Bishop and Rooke moves
             List<ChessMove> moves = GetBishopMoves(board, location, myColor);
-            List<ChessMove> rMoves = GetRookeMoves(board, location, myColor);
-
-            foreach (var m in rMoves)
-                moves.Add(m);
-
+            moves.AddRange(GetRookeMoves(board, location, myColor));
             return moves; 
         }
 

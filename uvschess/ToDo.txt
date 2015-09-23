@@ -1,0 +1,2 @@
+GetKnightMoves
+GetValue of moves
