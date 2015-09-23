@@ -61,8 +61,7 @@ namespace ChessPawnsAI
             {
                 for (int j = 0; j < 8; j++)
                 {
-                    ChessLocation location = new ChessLocation(i, j);
-                    moves.AddRange(GetMove(board, location, myColor)); // for each location add the valid moves
+                    moves.AddRange(GetMove(board, new ChessLocation(i, j), myColor)); // for each location add the valid moves
                 }
             }
             return moves;
@@ -175,75 +174,77 @@ namespace ChessPawnsAI
         {
             List<ChessMove> moves = new List<ChessMove>();
 
-            ChessLocation testLocation;
             //set locationweretesting to some valid move for white pawn
-            //is this the first move for this pawn?
-            if (location.Y == 6)
-            {
-                ChessMove move = new ChessMove(location, new ChessLocation(location.X, 4));
-                moves.Add(move);
-            }
-            //is there a piece in front of you?
-            testLocation = new ChessLocation(location.X, location.Y - 1);
-            if (board[testLocation] == ChessPiece.Empty)
-            {
-                //no theres not. 
-                ChessMove move = new ChessMove(location, testLocation);
-                moves.Add(move);
-            }
+            int x = location.X, y = location.Y;
 
-            //is there a piece to either of your diagonals?
-            testLocation = new ChessLocation(location.X - 1, location.Y - 1);
-            if (board[testLocation] < ChessPiece.Empty)
+            if (y == 6) //pawn hasn't moved
             {
-                ChessMove move = new ChessMove(location, testLocation);
-                moves.Add(move);
+                if (board[x, y - 1] == ChessPiece.Empty)
+                {
+                    moves.Add(new ChessMove(location, new ChessLocation(x, y - 1)));
+                    if (board[x, y - 2] == ChessPiece.Empty)
+                        moves.Add(new ChessMove(location, new ChessLocation(x, y - 2)));
+                }
             }
-            testLocation = new ChessLocation(location.X + 1, location.Y - 1);
-            if (board[testLocation] < ChessPiece.Empty)
-            {
-                ChessMove move = new ChessMove(location, testLocation);
-                moves.Add(move);
-            }
-            //    ChessMove move = new ChessMove(location, );
-            //moves.Add(move);
+            else // get forward move if available
+
+                if (y - 1 >= 0)
+                {
+                    if (board[x, y - 1] == ChessPiece.Empty)
+                    {
+                        //no theres not. 
+                        ChessMove move = new ChessMove(location, new ChessLocation(x, y - 1));
+                        moves.Add(move);
+                    }
+
+                    //is there a piece to either of your diagonals?
+                    if (x-1>=0 && board[x - 1, y - 1] < ChessPiece.Empty)
+                    {
+                        moves.Add(new ChessMove(location, new ChessLocation(x - 1, y - 1)));
+                    }
+                    if (x+1 < 8 && board[x + 1, y - 1] < ChessPiece.Empty)
+                    {
+                        moves.Add(new ChessMove(location, new ChessLocation(x + 1, y - 1)));
+                    }
+                }
             return moves;
         }
         List<ChessMove> GetBlackPawnMoves(ChessBoard board, ChessLocation location)
         {
             List<ChessMove> moves = new List<ChessMove>();
 
-            ChessLocation testLocation;
-            if (location.Y == 1)
-            {
-                ChessMove move = new ChessMove(location, new ChessLocation(location.X, 3));
-                moves.Add(move);
-            }
-            //is there a piece in front of you?
-            testLocation = new ChessLocation(location.X, location.Y + 1);
-            if (board[testLocation] == ChessPiece.Empty)
-            {
-                //no theres not. 
-                ChessMove move = new ChessMove(location, testLocation);
-                moves.Add(move);
-            }
+            int x = location.X, y = location.Y;
 
-            //is there a piece to either of your diagonals?
-            testLocation = new ChessLocation(location.X - 1, location.Y + 1);
-            //> here because all white pieces are > empty
-            if (board[testLocation] > ChessPiece.Empty)
+            if (y == 1) //pawn hasn't moved
             {
-                ChessMove move = new ChessMove(location, testLocation);
-                moves.Add(move);
+                if (board[x, y + 1] == ChessPiece.Empty)
+                {
+                    moves.Add(new ChessMove(location, new ChessLocation(x, y + 1)));
+                    if (board[x, y + 2] == ChessPiece.Empty)
+                        moves.Add(new ChessMove(location, new ChessLocation(x, y + 2)));
+                }
             }
-            testLocation = new ChessLocation(location.X + 1, location.Y + 1);
-            if (board[testLocation] > ChessPiece.Empty)
-            {
-                ChessMove move = new ChessMove(location, testLocation);
-                moves.Add(move);
-            }
-            //    ChessMove move = new ChessMove(location, );
-            //moves.Add(move);
+            else // get forward move if available
+
+                if (y + 1 < 8)
+                {
+                    if (board[x, y + 1] == ChessPiece.Empty)
+                    {
+                        //no theres not. 
+                        ChessMove move = new ChessMove(location, new ChessLocation(x, y + 1));
+                        moves.Add(move);
+                    }
+
+                    //is there a piece to either of your diagonals?
+                    if (x - 1 >= 0 && board[x - 1, y + 1] < ChessPiece.Empty)
+                    {
+                        moves.Add(new ChessMove(location, new ChessLocation(x - 1, y + 1)));
+                    }
+                    if (x + 1 < 8 && board[x + 1, y + 1] < ChessPiece.Empty)
+                    {
+                        moves.Add(new ChessMove(location, new ChessLocation(x + 1, y + 1)));
+                    }
+                }
             return moves;
         }
         List<ChessMove> GetBishopMoves(ChessBoard board, ChessLocation location, ChessColor myColor)

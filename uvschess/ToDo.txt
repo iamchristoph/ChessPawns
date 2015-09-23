@@ -1,2 +1,5 @@
 
 GetValue of moves
+debug
+getking moves
+"check" flag
