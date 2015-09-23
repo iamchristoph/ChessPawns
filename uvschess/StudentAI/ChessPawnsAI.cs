@@ -285,11 +285,95 @@ namespace ChessPawnsAI
             return moves;
         }
         List<ChessMove> GetKnightMoves(ChessBoard board, ChessLocation location, ChessColor myColor) { return new List<ChessMove>(); }
-        List<ChessMove> GetRookeMoves(ChessBoard board, ChessLocation location, ChessColor myColor) { return new List<ChessMove>(); }
-        List<ChessMove> GetQueenMoves(ChessBoard board, ChessLocation location, ChessColor myColor) { return new List<ChessMove>(); }
+
+        List<ChessMove> GetRookeMoves(ChessBoard board, ChessLocation location, ChessColor myColor) 
+        {
+            List<ChessMove> moves = new List<ChessMove>();
+
+            for (int dY = location.Y - 1; dY >= 0; dY-- )  // Up
+            {
+                if (board[location.X, dY] == ChessPiece.Empty)  // check if spot is empty
+                    moves.Add(new ChessMove(location, new ChessLocation(location.X, dY)));
+                else if (Color(board[location.X, dY]) == myColor)
+                    break;  // if we get to a filled space, we can quit going down this path
+
+                if (board[location.X, dY] != ChessPiece.Empty && Color(board[location.X, dY]) != myColor)
+                {
+                    moves.Add(new ChessMove(location, new ChessLocation(location.X, dY)));
+                    break;  // take the opponents piece and end searching this path
+                }
+            }
+
+            for (int dY = location.Y + 1; dY < 8; dY++)  // Down
+            {
+                if (board[location.X, dY] == ChessPiece.Empty)  // check if spot is empty
+                    moves.Add(new ChessMove(location, new ChessLocation(location.X, dY)));
+                else if (Color(board[location.X, dY]) == myColor)
+                    break;  // if we get to a filled space, we can quit going down this path
+
+                if (board[location.X, dY] != ChessPiece.Empty && Color(board[location.X, dY]) != myColor)
+                {
+                    moves.Add(new ChessMove(location, new ChessLocation(location.X, dY)));
+                    break;  // take the opponents piece and end searching this path
+                }
+            }
+
+            for (int dX = location.X; dX >= 0; dX--)  // Left
+            {
+                if (board[dX, location.Y] == ChessPiece.Empty)
+                {
+                    moves.Add(new ChessMove(location, new ChessLocation(dX, location.Y)));
+                    break;  // if we get to a filled space, we can quit going down this path
+                }
+
+                if (board[dX, location.Y] != ChessPiece.Empty) // not our color)
+                {
+                    moves.Add(new ChessMove(location, new ChessLocation(dX, location.Y)));
+                    break;   // take the opponents piece and end searching this path
+                }
+            }
+
+            for (int dX = location.X; dX < 8; dX++)  // Right
+            {
+                if (board[dX, location.Y] == ChessPiece.Empty)
+                {
+                    moves.Add(new ChessMove(location, new ChessLocation(dX, location.Y)));
+                    break;  // if we get to a filled space, we can quit going down this path
+                }
+
+                if (board[dX, location.Y] != ChessPiece.Empty) // not our color)
+                {
+                    moves.Add(new ChessMove(location, new ChessLocation(dX, location.Y)));
+                    break;   // take the opponents piece and end searching this path
+                }
+            }
+
+            return moves;
+        }
+
+        List<ChessMove> GetQueenMoves(ChessBoard board, ChessLocation location, ChessColor myColor) 
+        {
+            // queen is combination of Bishop and Rooke moves
+            List<ChessMove> moves = GetBishopMoves(board, location, myColor);
+            List<ChessMove> rMoves = GetRookeMoves(board, location, myColor);
+
+            foreach (var m in rMoves)
+                moves.Add(m);
+
+            return moves; 
+        }
+
         List<ChessMove> GetKingMoves(ChessBoard board, ChessLocation location, ChessColor myColor) { return new List<ChessMove>(); }
 
+
+
+
         #endregion
+
+        public static ChessColor Color(ChessPiece piece)
+        {
+            return piece > ChessPiece.Empty ? ChessColor.White : ChessColor.Black;
+        }
 
 
 
