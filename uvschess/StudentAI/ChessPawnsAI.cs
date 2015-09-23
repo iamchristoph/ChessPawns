@@ -209,7 +209,43 @@ namespace ChessPawnsAI
             //moves.Add(move);
             return moves;
         }
-        List<ChessMove> GetBlackPawnMoves(ChessBoard board, ChessLocation location) { return new List<ChessMove>(); }
+        List<ChessMove> GetBlackPawnMoves(ChessBoard board, ChessLocation location)
+        {
+            List<ChessMove> moves = new List<ChessMove>();
+
+            ChessLocation testLocation;
+            if (location.Y == 1)
+            {
+                ChessMove move = new ChessMove(location, new ChessLocation(location.X, 3));
+                moves.Add(move);
+            }
+            //is there a piece in front of you?
+            testLocation = new ChessLocation(location.X, location.Y - 1);
+            if (board[testLocation] == ChessPiece.Empty)
+            {
+                //no theres not. 
+                ChessMove move = new ChessMove(location, testLocation);
+                moves.Add(move);
+            }
+
+            //is there a piece to either of your diagonals?
+            testLocation = new ChessLocation(location.X - 1, location.Y - 1);
+            //> here because all white pieces are > empty
+            if (board[testLocation] > ChessPiece.Empty)
+            {
+                ChessMove move = new ChessMove(location, testLocation);
+                moves.Add(move);
+            }
+            testLocation = new ChessLocation(location.X + 1, location.Y - 1);
+            if (board[testLocation] > ChessPiece.Empty)
+            {
+                ChessMove move = new ChessMove(location, testLocation);
+                moves.Add(move);
+            }
+            //    ChessMove move = new ChessMove(location, );
+            //moves.Add(move);
+            return moves;
+        }
         List<ChessMove> GetBishopMoves(ChessBoard board, ChessLocation location, ChessColor myColor) { return new List<ChessMove>(); }
         List<ChessMove> GetKnightMoves(ChessBoard board, ChessLocation location, ChessColor myColor) { return new List<ChessMove>(); }
         List<ChessMove> GetRookeMoves(ChessBoard board, ChessLocation location, ChessColor myColor) { return new List<ChessMove>(); }
