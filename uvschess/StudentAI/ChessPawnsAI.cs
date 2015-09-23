@@ -246,7 +246,44 @@ namespace ChessPawnsAI
             //moves.Add(move);
             return moves;
         }
-        List<ChessMove> GetBishopMoves(ChessBoard board, ChessLocation location, ChessColor myColor) { return new List<ChessMove>(); }
+        List<ChessMove> GetBishopMoves(ChessBoard board, ChessLocation location, ChessColor myColor)
+        {
+            List<ChessMove> moves = new List<ChessMove>();
+            ChessLocation testLocation = new ChessLocation(0, 0);
+            for(int i = 0; i < 8; i++)
+            {
+                testLocation = new ChessLocation(location.X - i, location.Y - i);
+                moves.Add(new ChessMove(location, testLocation));
+                testLocation = new ChessLocation(location.X - i, location.Y + i);
+                moves.Add(new ChessMove(location, testLocation));
+                testLocation = new ChessLocation(location.X + i, location.Y - i);
+                moves.Add(new ChessMove(location, testLocation));
+                testLocation = new ChessLocation(location.X + i, location.Y + i);
+                moves.Add(new ChessMove(location, testLocation));
+            }
+            //now validate the moves
+            foreach (ChessMove m in moves)
+            {
+                if (myColor == ChessColor.White)
+                {
+                    //if either coordinate is invalid OR if theres a white piece there
+                    //im not sure if we want to do validation here, but it seems like this would be pretty quick. 
+                    if ((m.To.X > 7 || m.To.X < 0 || m.To.Y > 7 || m.To.Y < 0) || (board[m.To] > ChessPiece.Empty))
+                    {
+                        moves.Remove(m);
+                    }
+                }
+                else //your color isnt white
+                {
+                    //are any cooridantes invalid or is there a black piece already there?
+                    if ((m.To.X > 7 || m.To.X < 0 || m.To.Y > 7 || m.To.Y < 0) || (board[m.To] < ChessPiece.Empty))
+                    {
+                        moves.Remove(m);
+                    }
+                }
+            }
+            return moves;
+        }
         List<ChessMove> GetKnightMoves(ChessBoard board, ChessLocation location, ChessColor myColor) { return new List<ChessMove>(); }
         List<ChessMove> GetRookeMoves(ChessBoard board, ChessLocation location, ChessColor myColor) { return new List<ChessMove>(); }
         List<ChessMove> GetQueenMoves(ChessBoard board, ChessLocation location, ChessColor myColor) { return new List<ChessMove>(); }
