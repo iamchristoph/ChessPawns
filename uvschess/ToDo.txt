@@ -1,5 +1,6 @@
-
+"check" flag - need to validate if moves put us in check and not return them
+	- need to see if we are in check and move out of check
 GetValue of moves
-debug
-getking moves
-"check" flag
+heuristics
+heuristics
+heuristics
