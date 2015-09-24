@@ -5,5 +5,6 @@ heuristics
 heuristics
 heuristics
 
-need to log moves to the log
-need to check and see if were jumping over pawns/other pieces with pieces that cant do that. so really anything that isnt a knight. 
+need to log moves to the log _Do we need to do this or is this already taken care of by the profiler(framework)?
+
+need to check and see if were jumping over pawns/other pieces with pieces that cant do that. so really anything that isnt a knight. - the (Piece)GetMoves functions already do this. 
