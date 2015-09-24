@@ -45,7 +45,7 @@ namespace ChessPawnsAI
             List<ChessMove> moves = GetAllMoves(board, myColor);
             Random random = new Random();
             int randInt = random.Next(moves.Count);
-            return moves[randInt];
+            return moves[0];
         }
 
         /// <summary>
@@ -250,39 +250,39 @@ namespace ChessPawnsAI
         List<ChessMove> GetBishopMoves(ChessBoard board, ChessLocation location, ChessColor myColor)
         {
             List<ChessMove> moves = new List<ChessMove>();
-            ChessLocation testLocation = new ChessLocation(0, 0);
-            for(int i = 0; i < 8; i++)
-            {
-                testLocation = new ChessLocation(location.X - i, location.Y - i);
-                moves.Add(new ChessMove(location, testLocation));
-                testLocation = new ChessLocation(location.X - i, location.Y + i);
-                moves.Add(new ChessMove(location, testLocation));
-                testLocation = new ChessLocation(location.X + i, location.Y - i);
-                moves.Add(new ChessMove(location, testLocation));
-                testLocation = new ChessLocation(location.X + i, location.Y + i);
-                moves.Add(new ChessMove(location, testLocation));
-            }
-            //now validate the moves
-            foreach (ChessMove m in moves)
-            {
-                if (myColor == ChessColor.White)
-                {
-                    //if either coordinate is invalid OR if theres a white piece there
-                    //im not sure if we want to do validation here, but it seems like this would be pretty quick. 
-                    if ((m.To.X > 7 || m.To.X < 0 || m.To.Y > 7 || m.To.Y < 0) || (board[m.To] > ChessPiece.Empty))
-                    {
-                        moves.Remove(m);
-                    }
-                }
-                else //your color isnt white
-                {
-                    //are any cooridantes invalid or is there a black piece already there?
-                    if ((m.To.X > 7 || m.To.X < 0 || m.To.Y > 7 || m.To.Y < 0) || (board[m.To] < ChessPiece.Empty))
-                    {
-                        moves.Remove(m);
-                    }
-                }
-            }
+            //ChessLocation testLocation = new ChessLocation(0, 0);
+            //for(int i = 0; i < 8; i++)
+            //{
+            //    testLocation = new ChessLocation(location.X - i, location.Y - i);
+            //    moves.Add(new ChessMove(location, testLocation));
+            //    testLocation = new ChessLocation(location.X - i, location.Y + i);
+            //    moves.Add(new ChessMove(location, testLocation));
+            //    testLocation = new ChessLocation(location.X + i, location.Y - i);
+            //    moves.Add(new ChessMove(location, testLocation));
+            //    testLocation = new ChessLocation(location.X + i, location.Y + i);
+            //    moves.Add(new ChessMove(location, testLocation));
+            //}
+            ////now validate the moves
+            //foreach (ChessMove m in moves)
+            //{
+            //    if (myColor == ChessColor.White)
+            //    {
+            //        //if either coordinate is invalid OR if theres a white piece there
+            //        //im not sure if we want to do validation here, but it seems like this would be pretty quick. 
+            //        if ((m.To.X > 7 || m.To.X < 0 || m.To.Y > 7 || m.To.Y < 0) || (board[m.To] > ChessPiece.Empty))
+            //        {
+            //            moves.Remove(m);
+            //        }
+            //    }
+            //    else //your color isnt white
+            //    {
+            //        //are any cooridantes invalid or is there a black piece already there?
+            //        if ((m.To.X > 7 || m.To.X < 0 || m.To.Y > 7 || m.To.Y < 0) || (board[m.To] < ChessPiece.Empty))
+            //        {
+            //            moves.Remove(m);
+            //        }
+            //    }
+            //}
             return moves;
         }
         List<ChessMove> GetKnightMoves(ChessBoard board, ChessLocation location, ChessColor myColor) 
@@ -392,7 +392,7 @@ namespace ChessPawnsAI
                 }
             }
 
-            for (int dX = location.X; dX >= 0; dX--)  // Left
+            for (int dX = location.X-1; dX >= 0; dX--)  // Left
             {
                 if (board[dX, location.Y] == ChessPiece.Empty)
                 {
@@ -407,7 +407,7 @@ namespace ChessPawnsAI
                 }
             }
 
-            for (int dX = location.X; dX < 8; dX++)  // Right
+            for (int dX = location.X + 1; dX < 8; dX++)  // Right
             {
                 if (board[dX, location.Y] == ChessPiece.Empty)
                 {
