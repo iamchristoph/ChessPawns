@@ -45,7 +45,7 @@ namespace ChessPawnsAI
             List<ChessMove> moves = GetAllMoves(board, myColor);
             Random random = new Random();
             int randInt = random.Next(moves.Count);
-            return moves[0];
+            return moves[randInt];
         }
 
         /// <summary>
@@ -250,39 +250,67 @@ namespace ChessPawnsAI
         List<ChessMove> GetBishopMoves(ChessBoard board, ChessLocation location, ChessColor myColor)
         {
             List<ChessMove> moves = new List<ChessMove>();
-            //ChessLocation testLocation = new ChessLocation(0, 0);
-            //for(int i = 0; i < 8; i++)
-            //{
-            //    testLocation = new ChessLocation(location.X - i, location.Y - i);
-            //    moves.Add(new ChessMove(location, testLocation));
-            //    testLocation = new ChessLocation(location.X - i, location.Y + i);
-            //    moves.Add(new ChessMove(location, testLocation));
-            //    testLocation = new ChessLocation(location.X + i, location.Y - i);
-            //    moves.Add(new ChessMove(location, testLocation));
-            //    testLocation = new ChessLocation(location.X + i, location.Y + i);
-            //    moves.Add(new ChessMove(location, testLocation));
-            //}
-            ////now validate the moves
-            //foreach (ChessMove m in moves)
-            //{
-            //    if (myColor == ChessColor.White)
-            //    {
-            //        //if either coordinate is invalid OR if theres a white piece there
-            //        //im not sure if we want to do validation here, but it seems like this would be pretty quick. 
-            //        if ((m.To.X > 7 || m.To.X < 0 || m.To.Y > 7 || m.To.Y < 0) || (board[m.To] > ChessPiece.Empty))
-            //        {
-            //            moves.Remove(m);
-            //        }
-            //    }
-            //    else //your color isnt white
-            //    {
-            //        //are any cooridantes invalid or is there a black piece already there?
-            //        if ((m.To.X > 7 || m.To.X < 0 || m.To.Y > 7 || m.To.Y < 0) || (board[m.To] < ChessPiece.Empty))
-            //        {
-            //            moves.Remove(m);
-            //        }
-            //    }
-            //}
+            int x = location.X, y = location.Y;
+            for (int i = 1; i < 8; i++)  
+            {
+                if (x + i < 8 && y + i < 8) // down right 
+                {
+                    if (board[x+i, y+i] == ChessPiece.Empty)  // check if spot is empty
+                        moves.Add(new ChessMove(location, new ChessLocation(x + i, y + i)));
+                    else if (Color(board[x + i, y + i]) == myColor)
+                        break;  // if we get to a filled space, we can quit going down this path
+                    else // is opponent piece take it.
+                    {
+                        moves.Add(new ChessMove(location, new ChessLocation(x + i, y + i)));
+                        break;  // take the opponents piece and end searching this path
+                    }
+                }
+            }
+            for (int i = 1; i < 8; i++)
+            {
+                if (x - i >= 0 && y + i < 8) // down left 
+                {
+                    if (board[x - i, y + i] == ChessPiece.Empty)  // check if spot is empty
+                        moves.Add(new ChessMove(location, new ChessLocation(x - i, y + i)));
+                    else if (Color(board[x - i, y + i]) == myColor)
+                        break;  // if we get to a filled space, we can quit going down this path
+                    else // is opponent piece take it.
+                    {
+                        moves.Add(new ChessMove(location, new ChessLocation(x - i, y + i)));
+                        break;  // take the opponents piece and end searching this path
+                    }
+                }
+            }
+            for (int i = 1; i < 8; i++)
+            {
+                if (x + i < 8 && y - i >= 8) // up right 
+                {
+                    if (board[x + i, y - i] == ChessPiece.Empty)  // check if spot is empty
+                        moves.Add(new ChessMove(location, new ChessLocation(x + i, y - i)));
+                    else if (Color(board[x + i, y - i]) == myColor)
+                        break;  // if we get to a filled space, we can quit going down this path
+                    else // is opponent piece take it.
+                    {
+                        moves.Add(new ChessMove(location, new ChessLocation(x + i, y - i)));
+                        break;  // take the opponents piece and end searching this path
+                    }
+                }
+            }
+            for (int i = 1; i < 8; i++)
+            {
+                if (x - i >= 0 && y - i >= 0) // up left 
+                {
+                    if (board[x - i, y - i] == ChessPiece.Empty)  // check if spot is empty
+                        moves.Add(new ChessMove(location, new ChessLocation(x - i, y - i)));
+                    else if (Color(board[x - i, y - i]) == myColor)
+                        break;  // if we get to a filled space, we can quit going down this path
+                    else // is opponent piece take it.
+                    {
+                        moves.Add(new ChessMove(location, new ChessLocation(x - i, y - i)));
+                        break;  // take the opponents piece and end searching this path
+                    }
+                }
+            }
             return moves;
         }
         List<ChessMove> GetKnightMoves(ChessBoard board, ChessLocation location, ChessColor myColor) 
@@ -392,35 +420,32 @@ namespace ChessPawnsAI
                 }
             }
 
-            for (int dX = location.X-1; dX >= 0; dX--)  // Left
+            for (int dX = location.X - 1; dX >= 0; dX--)  // Left
             {
-                if (board[dX, location.Y] == ChessPiece.Empty)
-                {
+                if (board[dX, location.Y] == ChessPiece.Empty)  // check if spot is empty
                     moves.Add(new ChessMove(location, new ChessLocation(dX, location.Y)));
+                else if (Color(board[dX, location.Y]) == myColor)
                     break;  // if we get to a filled space, we can quit going down this path
-                }
-
-                if (board[dX, location.Y] != ChessPiece.Empty) // not our color)
+                else // is opponent piece take it.
                 {
                     moves.Add(new ChessMove(location, new ChessLocation(dX, location.Y)));
-                    break;   // take the opponents piece and end searching this path
+                    break;  // take the opponents piece and end searching this path
                 }
             }
 
             for (int dX = location.X + 1; dX < 8; dX++)  // Right
             {
-                if (board[dX, location.Y] == ChessPiece.Empty)
-                {
+                if (board[dX, location.Y] == ChessPiece.Empty)  // check if spot is empty
                     moves.Add(new ChessMove(location, new ChessLocation(dX, location.Y)));
+                else if (Color(board[dX, location.Y]) == myColor)
                     break;  // if we get to a filled space, we can quit going down this path
-                }
-
-                if (board[dX, location.Y] != ChessPiece.Empty) // not our color)
+                else // is opponent piece take it.
                 {
                     moves.Add(new ChessMove(location, new ChessLocation(dX, location.Y)));
-                    break;   // take the opponents piece and end searching this path
+                    break;  // take the opponents piece and end searching this path
                 }
             }
+
 
             return moves;
         }
