@@ -30,7 +30,10 @@ namespace ChessPawnsAI
         /// <returns> Returns the best chess move the player has for the given chess board</returns>
         public ChessMove GetNextMove(ChessBoard board, ChessColor myColor)
         {
+
             ChessMove move = GetRndMove(board, myColor);
+            this.Log(myColor.ToString() + " (" + this.Name + ") just moved.");
+
             return move;
         }
 
