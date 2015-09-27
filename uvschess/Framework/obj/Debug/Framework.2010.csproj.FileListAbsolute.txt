@@ -38,3 +38,16 @@ C:\Users\Christopher\Documents\CS-4470\ChessPawns\uvschess\Framework\obj\Debug\U
 C:\Users\Christopher\Documents\CS-4470\ChessPawns\uvschess\Framework\obj\Debug\Framework.2010.csproj.GenerateResource.Cache
 C:\Users\Christopher\Documents\CS-4470\ChessPawns\uvschess\Framework\bin\Debug\UvsChess.exe
 C:\Users\Christopher\Documents\CS-4470\ChessPawns\uvschess\Framework\bin\Debug\UvsChess.pdb
+C:\Users\Sara.Rands_base\Source\Repos\ChessPawns\uvschess\Framework\bin\Debug\UvsChess.exe.config
+C:\Users\Sara.Rands_base\Source\Repos\ChessPawns\uvschess\Framework\obj\Debug\UvsChess.exe
+C:\Users\Sara.Rands_base\Source\Repos\ChessPawns\uvschess\Framework\obj\Debug\UvsChess.pdb
+C:\Users\Sara.Rands_base\Source\Repos\ChessPawns\uvschess\Framework\bin\Debug\UvsChess.exe
+C:\Users\Sara.Rands_base\Source\Repos\ChessPawns\uvschess\Framework\bin\Debug\UvsChess.pdb
+C:\Users\Sara.Rands_base\Source\Repos\ChessPawns\uvschess\Framework\obj\Debug\Framework.2010.csprojResolveAssemblyReference.cache
+C:\Users\Sara.Rands_base\Source\Repos\ChessPawns\uvschess\Framework\obj\Debug\UvsChess.Gui.GuiChessBoard.resources
+C:\Users\Sara.Rands_base\Source\Repos\ChessPawns\uvschess\Framework\obj\Debug\UvsChess.Gui.WinGui.resources
+C:\Users\Sara.Rands_base\Source\Repos\ChessPawns\uvschess\Framework\obj\Debug\UvsChess.Gui.AboutUvsChess.resources
+C:\Users\Sara.Rands_base\Source\Repos\ChessPawns\uvschess\Framework\obj\Debug\UvsChess.Gui.Preferences.resources
+C:\Users\Sara.Rands_base\Source\Repos\ChessPawns\uvschess\Framework\obj\Debug\UvsChess.Gui.GuiDecisionTree.resources
+C:\Users\Sara.Rands_base\Source\Repos\ChessPawns\uvschess\Framework\obj\Debug\UvsChess.Gui.MessageBox.resources
+C:\Users\Sara.Rands_base\Source\Repos\ChessPawns\uvschess\Framework\obj\Debug\Framework.2010.csproj.GenerateResource.Cache
