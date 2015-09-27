@@ -8,3 +8,8 @@ C:\Users\Christopher\Documents\CS-4470\ChessPawns\uvschess\Framework\bin\Debug\S
 C:\Users\Christopher\Documents\CS-4470\ChessPawns\uvschess\StudentAI\obj\Debug\ChessPawnsAI.csprojResolveAssemblyReference.cache
 C:\Users\Christopher\Documents\CS-4470\ChessPawns\uvschess\StudentAI\obj\Debug\StudentAI.dll
 C:\Users\Christopher\Documents\CS-4470\ChessPawns\uvschess\StudentAI\obj\Debug\StudentAI.pdb
+C:\Users\Sara.Rands_base\Source\Repos\ChessPawns\uvschess\Framework\bin\Debug\StudentAI.dll
+C:\Users\Sara.Rands_base\Source\Repos\ChessPawns\uvschess\Framework\bin\Debug\StudentAI.pdb
+C:\Users\Sara.Rands_base\Source\Repos\ChessPawns\uvschess\StudentAI\obj\Debug\ChessPawnsAI.csprojResolveAssemblyReference.cache
+C:\Users\Sara.Rands_base\Source\Repos\ChessPawns\uvschess\StudentAI\obj\Debug\StudentAI.dll
+C:\Users\Sara.Rands_base\Source\Repos\ChessPawns\uvschess\StudentAI\obj\Debug\StudentAI.pdb

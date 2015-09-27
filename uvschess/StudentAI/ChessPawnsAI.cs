@@ -77,7 +77,7 @@ namespace ChessPawnsAI
             //init a new location so we can have somethign to write to. 
 
             List<ChessMove> moves = new List<ChessMove>();
-            //first well need to figure out what kind of piece was passed in 
+            //first we'll need to figure out what kind of piece was passed in 
             if (myColor == ChessColor.White)
             {
                 switch (myPiece)
@@ -147,22 +147,34 @@ namespace ChessPawnsAI
                         }
                     case ChessPiece.BlackKing:
                         {
-                            List<ChessMove> check = new List<ChessMove>(GetKingMoves(board, location, myColor));
-                            foreach (ChessMove move in check)
-                            {
-                                if (!isCheck(board, location, myColor))
-                                {
-                                    moves.Add(move);
-                                }
-                            }
+                            moves.AddRange(GetKingMoves(board, location, myColor));
                             break;
                         }
                 }
             }
-            //do the rest of the moves here. 
-
+            // (If we need more speed, move these methods up to GetAllMoves to avoid repeating it too much--
+            // king location is needed to check for check)
+            ChessLocation king = FindKing(board, myColor);
+            ChessLocation otherKing = FindKing(board, OtherColor(myColor));
+            // Eliminate any moves that put us into check
+            //for (int i = moves.Count - 1; i >= 0; --i)
+            //{
+            //    if (IsCheck(board, moves[i], king, myColor))
+            //    {
+            //        moves.RemoveAt(i);
+            //    }
+            //}
+            //// Flag any moves that put our opponent in check
+            //foreach (ChessMove move in moves)
+            //{
+            //    if (IsCheck(board, move, otherKing, OtherColor(myColor)))
+            //    {
+            //        move.Flag = ChessFlag.Check;
+            //    }
+            //}
             return moves;
         }
+
 
         /// <summary>
         /// Validates a move. The framework uses this to validate the opponents move.
@@ -576,22 +588,370 @@ namespace ChessPawnsAI
             return piece > ChessPiece.Empty ? ChessColor.White : ChessColor.Black;
         }
 
-        bool isCheck(ChessBoard board, ChessLocation king, ChessColor color)
+        // IsCheck function answers the question:
+        // Does this move, performed on this board, put this color in check?
+        bool IsCheck(ChessBoard b, ChessMove move, ChessLocation king, ChessColor color)
         {
-            //int x = king.X, y = king.Y;
-            
-            // check for pawns
-            //if () {}
-
-            // check for knights
-
-            // check for queens bishops rookes or kings
-
+            // Create a cloned board with the prospective move
+            ChessBoard board = b.Clone();
+            board.MakeMove(move);
+            ChessPiece kingPiece;
+            if (color == ChessColor.White)
+            {
+                kingPiece = ChessPiece.WhiteKing;
+            }
+            else
+            {
+                kingPiece = ChessPiece.BlackKing;
+            }
+            // Verify the king is where we think it is
+            if (board[king] != kingPiece)
+            {
+                // If it's not there, it should be in the "to" location of the move
+                if (board[move.To] == kingPiece)
+                {
+                    king = move.To;
+                }
+                else
+                {
+                    king = FindKing(board, color);
+                }
+            }
+            Console.WriteLine("InCheck method, color: " + color);
+            // Checks for knights within range
+            if (InCheckFromKnight(board, king, color))
+            {
+                return true;
+            }
+            // Checks the tiles contiguous with the king
+            if (InCheckFromPawnOrKing(board, king, color))
+            {
+                return true;
+            }
+            // Checks the diagonals for threats
+            if (InCheckFromBishopOrQueen(board, king, color))
+            {
+                return true;
+            }
+            // Checks the column and row for threats
+            if (InCheckFromRookOrQueen(board, king, color))
+            {
+                return true;
+            }
             return false;
         }
 
+        private bool InCheckFromKnight(ChessBoard board, ChessLocation king, ChessColor color)
+        {
+            int x = king.X, y = king.Y;
+            ChessPiece knight;
+            if (color == ChessColor.White)
+            {
+                knight = ChessPiece.BlackKnight;
+            }
+            else // black
+            {
+                knight = ChessPiece.WhiteKnight;
+            }
+            List<ChessLocation> locs = new List<ChessLocation>();
+            locs.Add(new ChessLocation(x + 2, y + 1));
+            locs.Add(new ChessLocation(x + 2, y - 1));
+            locs.Add(new ChessLocation(x - 2, y + 1));
+            locs.Add(new ChessLocation(x - 2, y - 1));
+            locs.Add(new ChessLocation(x + 1, y + 2));
+            locs.Add(new ChessLocation(x + 1, y - 2));
+            locs.Add(new ChessLocation(x - 1, y + 2));
+            locs.Add(new ChessLocation(x - 1, y - 2));
+            foreach (ChessLocation loc in locs)
+            {
+                if (IsValid(loc)) // Bounds checking
+                {
+                    // Is there a knight there?
+                    if (board[loc] == knight)
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
 
+        private bool InCheckFromPawnOrKing(ChessBoard board, ChessLocation king, ChessColor color)
+        {
+            int x = king.X, y = king.Y;
+            List<ChessLocation> locs = new List<ChessLocation>();
+            ChessPiece pawn, kingPiece;
+            if (color == ChessColor.White)
+            {
+                pawn = ChessPiece.BlackPawn;
+                kingPiece = ChessPiece.BlackKing;
+            }
+            else // black
+            {
+                pawn = ChessPiece.WhitePawn;
+                kingPiece = ChessPiece.WhiteKing;
+            }
+            // Check for pawns:
+            if (color == ChessColor.White)
+            {
+                locs.Add(new ChessLocation(x + 1, y - 1));
+                locs.Add(new ChessLocation(x - 1, y - 1));
+            }
+            else // black
+            {
+                locs.Add(new ChessLocation(x + 1, y + 1));
+                locs.Add(new ChessLocation(x - 1, y + 1));
+            }
+            foreach (ChessLocation loc in locs)
+            {
+                if (IsValid(loc))
+                {
+                    if (board[loc] == pawn)
+                    {
+                        return true;
+                    }
+                }
+            }
+            locs.Clear();
+            // Check for kings all around the king
+            locs.Add(new ChessLocation(x - 1, y - 1));
+            locs.Add(new ChessLocation(x, y - 1));
+            locs.Add(new ChessLocation(x + 1, y - 1));
+            locs.Add(new ChessLocation(x + 1, y));
+            locs.Add(new ChessLocation(x + 1, y + 1));
+            locs.Add(new ChessLocation(x, y + 1));
+            locs.Add(new ChessLocation(x - 1, y + 1));
+            locs.Add(new ChessLocation(x - 1, y));
+            foreach (ChessLocation loc in locs)
+            {
+                if (IsValid(loc))
+                {
+                    if (board[loc] == kingPiece)
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
 
+        private bool InCheckFromBishopOrQueen(ChessBoard board, ChessLocation king, ChessColor color)
+        {
+            int x = king.X, y = king.Y;
+            ChessLocation nw = null, ne = null, se = null, sw = null;
+            ChessPiece bishop, queen; 
+            if (color == ChessColor.White)
+            {
+                bishop = ChessPiece.BlackBishop;
+                queen = ChessPiece.BlackQueen;
+            }
+            else // black
+            {
+                bishop = ChessPiece.WhiteBishop;
+                queen = ChessPiece.WhiteQueen;
+            }
+            // Northwest diagonal:
+            // Find nearest empty piece on diagonal and check if it's a bishop or queen
+            if (IsValid(x - 1, y - 1))
+            {
+                nw = new ChessLocation(x - 1, y - 1);
+                while (board[nw] == ChessPiece.Empty)
+                {
+                    if (IsValid(x - 1, y - 1))
+                    {
+                        nw = new ChessLocation(x - 1, y - 1);
+                    }
+                }
+                if ((board[nw] == bishop) || (board[nw] == queen))
+                {
+                    return true;
+                }
+            }
+            // Northeast diagonal
+            if (IsValid(x + 1, y - 1))
+            {
+                ne = new ChessLocation(x + 1, y - 1);
+                while (board[ne] == ChessPiece.Empty)
+                {
+                    if (IsValid(x + 1, y - 1))
+                    {
+                        ne = new ChessLocation(x + 1, y - 1);
+                    }
+                }
+                if ((board[ne] == bishop) || (board[ne] == queen))
+                {
+                    return true;
+                }
+            }
+            // Southeast
+            if (IsValid(x + 1, y + 1))
+            {
+                se = new ChessLocation(x + 1, y + 1);
+                while (board[se] == ChessPiece.Empty)
+                {
+                    if (IsValid(x + 1, y + 1))
+                    {
+                        se = new ChessLocation(x + 1, y + 1);
+                    }
+                }
+                if ((board[se] == bishop) || (board[se] == queen))
+                {
+                    return true;
+                }
+            }
+            // Southwest
+            if (IsValid(x - 1, y + 1))
+            {
+                sw = new ChessLocation(x - 1, y + 1);
+                while (board[sw] == ChessPiece.Empty)
+                {
+                    if (IsValid(x - 1, y + 1))
+                    {
+                        sw = new ChessLocation(x - 1, y + 1);
+                    }
+                }
+                if ((board[sw] == bishop) || (board[sw] == queen))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private bool InCheckFromRookOrQueen(ChessBoard board, ChessLocation king, ChessColor color)
+        {
+            int x = king.X, y = king.Y;
+            ChessLocation nn = null, ee = null, ss = null, ww = null;
+            ChessPiece rook, queen;
+            if (color == ChessColor.White)
+            {
+                rook = ChessPiece.BlackRook;
+                queen = ChessPiece.BlackQueen;
+            }
+            else // black
+            {
+                rook = ChessPiece.WhiteRook;
+                queen = ChessPiece.WhiteQueen;
+            }
+            // North (nn)
+            if (IsValid(x, y - 1))
+            {
+                nn = new ChessLocation(x, y - 1);
+                while (board[nn] == ChessPiece.Empty)
+                {
+                    if (IsValid(x, y - 1))
+                    {
+                        nn = new ChessLocation(x, y - 1);
+                    }
+                }
+                if ((board[nn] == rook) || (board[nn] == queen))
+                {
+                    return true;
+                }
+            }
+            // East (ee)
+            if (IsValid(x + 1, y))
+            {
+                ee = new ChessLocation(x + 1, y);
+                while (board[ee] == ChessPiece.Empty)
+                {
+                    if (IsValid(x + 1, y))
+                    {
+                        ee = new ChessLocation(x + 1, y);
+                    }
+                }
+                if ((board[ee] == rook) || (board[ee] == queen))
+                {
+                    return true;
+                }
+            }
+            // South (ss)
+            if (IsValid(x, y + 1))
+            {
+                ss = new ChessLocation(x, y + 1);
+                while (board[ss] == ChessPiece.Empty)
+                {
+                    if (IsValid(x, y + 1))
+                    {
+                        ss = new ChessLocation(x, y + 1);
+                    }
+                }
+                if ((board[ss] == rook) || (board[ss] == queen))
+                {
+                    return true;
+                }
+            }
+            // West (ww)
+            if (IsValid(x - 1, y))
+            {
+                ww = new ChessLocation(x - 1, y);
+                while (board[ww] == ChessPiece.Empty)
+                {
+                    if (IsValid(x - 1, y))
+                    {
+                        ww = new ChessLocation(x - 1, y);
+                    }
+                }
+                if ((board[ww] == rook) || (board[ww] == queen))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        bool IsValid(ChessLocation loc)
+        {
+            if ((loc.X >= 0) && (loc.X < 8) && (loc.Y >= 0) && (loc.Y < 8))
+            {
+                return true;
+            }
+            return false;
+        }
+
+        bool IsValid(int x, int y)
+        {
+            if ((x >= 0) && (x < 8) && (y >= 0) && (y < 8))
+            {
+                return true;
+            }
+            return false;
+        }
+
+        ChessColor OtherColor(ChessColor color)
+        {
+            if (color == ChessColor.White)
+            {
+                return ChessColor.Black;
+            }
+            else return ChessColor.White;
+        }
+
+        private ChessLocation FindKing(ChessBoard board, ChessColor myColor)
+        {
+            for (int i = 0; i < 8; i++)
+            {
+                for (int j = 0; j < 8; j++)
+                {
+                    ChessPiece current = board[i, j];
+                    if (myColor == ChessColor.White)
+                    {
+                        if (current == ChessPiece.WhiteKing)
+                        {
+                            return new ChessLocation(i, j);
+                        }
+                    }
+                    else
+                    {
+                        if (current == ChessPiece.BlackKing)
+                        {
+                            return new ChessLocation(i, j);
+                        }
+                    }
+                }
+            }
+            return null;
+        }
 
 
 
