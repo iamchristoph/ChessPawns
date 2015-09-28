@@ -96,7 +96,13 @@ namespace ChessPawnsAI
             int lowestValue = baseMoveValue;
             for(int i=0; i<moves.Count; i++)
             {
-                if(moveValues[i] < lowestValue)
+                // If the move would put you in check, ignore it.
+                if (IsCheck(board, moves[i], FindKing(board, myColor), myColor))
+                {
+                    continue;
+                }
+
+                if (moveValues[i] < lowestValue)
                 {
                     lowestValueMoves = new List<ChessMove>();
                     lowestValue = moveValues[i];
@@ -104,10 +110,13 @@ namespace ChessPawnsAI
 
                 if(moveValues[i] == lowestValue)
                 {
+                    // If the move would put you in check, ignore it.
+
                     lowestValueMoves.Add(moves[i]);
                 }
             }
 
+            
             Random random = new Random();
             int randInt = random.Next(lowestValueMoves.Count);
             ChessMove move = lowestValueMoves[randInt];
