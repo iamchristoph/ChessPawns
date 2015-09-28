@@ -31,6 +31,7 @@ namespace ChessPawnsAI
         public ChessMove GetNextMove(ChessBoard board, ChessColor myColor)
         {
             //ChessMove move = GetRndMove(board, myColor);
+            //return new ChessMove(new ChessLocation(0, 0), new ChessLocation(0, 0), ChessFlag.);
             ChessMove move = GetStrategicMove(board, myColor);
             return move;
         }
@@ -50,6 +51,7 @@ namespace ChessPawnsAI
             int captureBishop = 100;
             int captureRook = 110;
             int captureQueen = 300;
+            int check = 350;
             int captureKing = baseMoveValue;
 
 
@@ -58,6 +60,12 @@ namespace ChessPawnsAI
                 ChessLocation destination = moves[i].To;
                 ChessPiece whatsThere = board[destination];
 
+                int value = baseMoveValue;
+
+                if(moves[i].Flag == ChessFlag.Check)
+                {
+                    moveValues.Add(baseMoveValue - check);
+                }
                 if (whatsThere == ChessPiece.Empty)
                     moveValues.Add(baseMoveValue);
                 if (myColor == ChessColor.Black)
