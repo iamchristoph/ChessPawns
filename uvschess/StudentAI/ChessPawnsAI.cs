@@ -30,10 +30,10 @@ namespace ChessPawnsAI
         /// <returns> Returns the best chess move the player has for the given chess board</returns>
         public ChessMove GetNextMove(ChessBoard board, ChessColor myColor)
         {
-            //ChessMove move = GetRndMove(board, myColor);
+            ChessMove move;// = GetRndMove(board, myColor);
             //return new ChessMove(new ChessLocation(0, 0), new ChessLocation(0, 0), ChessFlag.);
-            ChessMove move = GetStrategicMove(board, myColor);
-
+            //move = GetStrategicMove(board, myColor);
+            move = GetLookAheadMove(board, myColor);
             return move;
         }
 
@@ -64,13 +64,13 @@ namespace ChessPawnsAI
             int captureBishop = 100;
             int captureRook = 110;
             int captureQueen = 350;
-            int check = 300;
+            int check = 20;
             int checkMate = baseMoveValue;
 
             ChessLocation destination = move.To;
             ChessPiece whatsThere = board[destination];
 
-            int value = baseMoveValue;
+            move.ValueOfMove = baseMoveValue;
 
             if (move.Flag == ChessFlag.Check)
                 move.ValueOfMove -= check;
@@ -98,27 +98,48 @@ namespace ChessPawnsAI
             {
                 return new ChessMove(new ChessLocation(0, 0), new ChessLocation(0, 0), ChessFlag.Stalemate);
             }
-
-            
-
-            int baseMoveValue = 1000; // Magic number, figured I'd start somewhere
-            List<int> moveValues = new List<int>();
-            // Calculate differently based on how many pieces are left on the board for additional speed.
-            // Right now this is just greedy
-
-            // Taking a piece? Value lowers according to what piece you're taking (Queen is more important than a Pawn)
             
             foreach (ChessMove move in moves)
             {
                 GetMoveValue(move, board);
             }
-            Log("Got MoveValues");
+            
+            List<ChessMove> bestMoves = getBestMoves(moves);
+                        
+            //Log("There are " + moves.Count + " possible moves, with " + bestMoves.Count + " moves that seem decent");
+            
+            Random random = new Random();
+            int randInt = random.Next(bestMoves.Count);
+            return bestMoves[randInt];
+        }
+
+        public ChessMove GetLookAheadMove(ChessBoard board, ChessColor myColor)
+        {
+            List<ChessMove> moves = GetAllMoves(board, myColor);
+            GetCheckMate(moves, board, myColor);
+            if (moves.Count < 1) // if we are in stalemate
+            {
+                return new ChessMove(new ChessLocation(0, 0), new ChessLocation(0, 0), ChessFlag.Stalemate);
+            }
+
+            foreach (ChessMove move in moves)
+            {
+                GetMoveValue(move, board);
+            }
+            if (moves.Count < 20)
+            {
+                foreach (ChessMove move in moves)
+                {
+                    ChessBoard tBoard = board.Clone();
+                    tBoard.MakeMove(move);
+                    move.ValueOfMove += (GetStrategicMove(tBoard, OtherColor(myColor)).ValueOfMove);
+                }
+            }
+
             List<ChessMove> bestMoves = getBestMoves(moves);
 
+            //Log("There are " + moves.Count + " possible moves, with " + bestMoves.Count + " moves that seem decent.");
 
-            
-            Log("There are " + moves.Count + " possible moves, with " + bestMoves.Count + " moves that seem decent");
-            
             Random random = new Random();
             int randInt = random.Next(bestMoves.Count);
             return bestMoves[randInt];
@@ -128,7 +149,7 @@ namespace ChessPawnsAI
         {
             List<ChessMove> bestMoves = new List<ChessMove>();
             // Iterate through moveValues and add the move with the lowest value, clearing the list and re-making it if you find something lower.
-            int lowestValue = 1000;
+            int lowestValue = 10000;
             int numMoves = 1;
             for (int i = 0; i < allMoves.Count; ++i)
             {
@@ -737,7 +758,8 @@ namespace ChessPawnsAI
                     king = FindKing(board, color);
                 }
             }
-            // Checks for knights within range
+            //Console.WriteLine("InCheck method, color: " + color);
+            //// Checks for knights within range
             if (InCheckFromKnight(board, king, color))
             {
                 return true;
@@ -1052,23 +1074,24 @@ namespace ChessPawnsAI
 
         private ChessLocation FindKing(ChessBoard board, ChessColor myColor)
         {
-            ChessPiece king;
-            if (myColor == ChessColor.White)
-            {
-                king = ChessPiece.WhiteKing;
-            }
-            else // black
-            {
-                king = ChessPiece.BlackKing;
-            }
             for (int i = 0; i < 8; i++)
             {
                 for (int j = 0; j < 8; j++)
                 {
                     ChessPiece current = board[i, j];
-                    if (current == king)
+                    if (myColor == ChessColor.White)
                     {
-                        return new ChessLocation(i, j);
+                        if (current == ChessPiece.WhiteKing)
+                        {
+                            return new ChessLocation(i, j);
+                        }
+                    }
+                    else
+                    {
+                        if (current == ChessPiece.BlackKing)
+                        {
+                            return new ChessLocation(i, j);
+                        }
                     }
                 }
             }
