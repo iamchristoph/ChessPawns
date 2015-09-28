@@ -52,7 +52,6 @@ namespace ChessPawnsAI
             int captureQueen = 300;
             int captureKing = baseMoveValue;
 
-            Log("My Turn, with " + moves.Count + " moves available");
 
             for (int i=0; i<moves.Count;i++)
             {
@@ -92,7 +91,6 @@ namespace ChessPawnsAI
                         moveValues.Add(baseMoveValue - captureKing);
                 }
             }
-            Log("Generated values for all moves");
             List<ChessMove> lowestValueMoves = new List<ChessMove>();
             // Iterate through moveValues and add the move with the lowest value, clearing the list and re-making it if you find something lower.
             int lowestValue = baseMoveValue;
@@ -119,7 +117,7 @@ namespace ChessPawnsAI
                     lowestValueMoves.Add(moves[i]);
                 }
             }
-            Log("There are " + lowestValueMoves.Count + " moves that seem decent");
+            Log("There are " + moves.Count + " possible moves, with " + lowestValueMoves.Count + " moves that seem decent");
             
             Random random = new Random();
             int randInt = random.Next(lowestValueMoves.Count);
