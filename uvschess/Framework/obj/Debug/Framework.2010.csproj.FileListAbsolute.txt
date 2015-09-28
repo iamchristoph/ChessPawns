@@ -51,3 +51,16 @@ C:\Users\Sara.Rands_base\Source\Repos\ChessPawns\uvschess\Framework\obj\Debug\Uv
 C:\Users\Sara.Rands_base\Source\Repos\ChessPawns\uvschess\Framework\obj\Debug\UvsChess.Gui.GuiDecisionTree.resources
 C:\Users\Sara.Rands_base\Source\Repos\ChessPawns\uvschess\Framework\obj\Debug\UvsChess.Gui.MessageBox.resources
 C:\Users\Sara.Rands_base\Source\Repos\ChessPawns\uvschess\Framework\obj\Debug\Framework.2010.csproj.GenerateResource.Cache
+C:\Users\Travis\Documents\Programming\School\CS 4470 - AI\Chess\ChessPawns\uvschess\Framework\bin\Debug\UvsChess.exe.config
+C:\Users\Travis\Documents\Programming\School\CS 4470 - AI\Chess\ChessPawns\uvschess\Framework\obj\Debug\UvsChess.exe
+C:\Users\Travis\Documents\Programming\School\CS 4470 - AI\Chess\ChessPawns\uvschess\Framework\obj\Debug\UvsChess.pdb
+C:\Users\Travis\Documents\Programming\School\CS 4470 - AI\Chess\ChessPawns\uvschess\Framework\bin\Debug\UvsChess.exe
+C:\Users\Travis\Documents\Programming\School\CS 4470 - AI\Chess\ChessPawns\uvschess\Framework\bin\Debug\UvsChess.pdb
+C:\Users\Travis\Documents\Programming\School\CS 4470 - AI\Chess\ChessPawns\uvschess\Framework\obj\Debug\Framework.2010.csprojResolveAssemblyReference.cache
+C:\Users\Travis\Documents\Programming\School\CS 4470 - AI\Chess\ChessPawns\uvschess\Framework\obj\Debug\UvsChess.Gui.GuiChessBoard.resources
+C:\Users\Travis\Documents\Programming\School\CS 4470 - AI\Chess\ChessPawns\uvschess\Framework\obj\Debug\UvsChess.Gui.WinGui.resources
+C:\Users\Travis\Documents\Programming\School\CS 4470 - AI\Chess\ChessPawns\uvschess\Framework\obj\Debug\UvsChess.Gui.AboutUvsChess.resources
+C:\Users\Travis\Documents\Programming\School\CS 4470 - AI\Chess\ChessPawns\uvschess\Framework\obj\Debug\UvsChess.Gui.Preferences.resources
+C:\Users\Travis\Documents\Programming\School\CS 4470 - AI\Chess\ChessPawns\uvschess\Framework\obj\Debug\UvsChess.Gui.GuiDecisionTree.resources
+C:\Users\Travis\Documents\Programming\School\CS 4470 - AI\Chess\ChessPawns\uvschess\Framework\obj\Debug\UvsChess.Gui.MessageBox.resources
+C:\Users\Travis\Documents\Programming\School\CS 4470 - AI\Chess\ChessPawns\uvschess\Framework\obj\Debug\Framework.2010.csproj.GenerateResource.Cache

@@ -30,7 +30,88 @@ namespace ChessPawnsAI
         /// <returns> Returns the best chess move the player has for the given chess board</returns>
         public ChessMove GetNextMove(ChessBoard board, ChessColor myColor)
         {
-            ChessMove move = GetRndMove(board, myColor);
+            //ChessMove move = GetRndMove(board, myColor);
+            ChessMove move = GetStrategicMove(board, myColor);
+            return move;
+        }
+
+        public ChessMove GetStrategicMove(ChessBoard board, ChessColor myColor)
+        {
+            List<ChessMove> moves = GetAllMoves(board, myColor);
+
+            int baseMoveValue = 500; // Magic number, figured I'd start somewhere
+            List<int> moveValues = new List<int>();
+            // Calculate differently based on how many pieces are left on the board for additional speed.
+
+            // Right now this is just greedy
+
+            // Taking a piece? Value lowers according to what piece you're taking (Queen is more important than a Pawn)
+            int capturePawn = 20;
+            int captureKnight = 50;
+            int captureBishop = 100;
+            int captureRook = 100;
+            int captureQueen = 300;
+            int captureKing = baseMoveValue;
+
+            for (int i=0; i<moves.Count;i++)
+            {
+                ChessLocation destination = moves[i].To;
+                ChessPiece whatsThere = board[destination];
+
+                if (whatsThere == ChessPiece.Empty)
+                    moveValues.Add(baseMoveValue);
+                if (myColor == ChessColor.Black)
+                {
+                    if (whatsThere == ChessPiece.WhitePawn)
+                        moveValues.Add(baseMoveValue - capturePawn);
+                    if (whatsThere == ChessPiece.WhiteKnight)
+                        moveValues.Add(baseMoveValue - captureKnight);
+                    if (whatsThere == ChessPiece.WhiteBishop)
+                        moveValues.Add(baseMoveValue - captureBishop);
+                    if (whatsThere == ChessPiece.WhiteRook)
+                        moveValues.Add(baseMoveValue - captureRook);
+                    if (whatsThere == ChessPiece.WhiteQueen)
+                        moveValues.Add(baseMoveValue - captureQueen);
+                    if (whatsThere == ChessPiece.WhiteKing)
+                        moveValues.Add(baseMoveValue - captureKing);
+                }
+                else
+                {
+                    if (whatsThere == ChessPiece.BlackPawn)
+                        moveValues.Add(baseMoveValue - capturePawn);
+                    if (whatsThere == ChessPiece.BlackKnight)
+                        moveValues.Add(baseMoveValue - captureKnight);
+                    if (whatsThere == ChessPiece.BlackBishop)
+                        moveValues.Add(baseMoveValue - captureBishop);
+                    if (whatsThere == ChessPiece.BlackRook)
+                        moveValues.Add(baseMoveValue - captureRook);
+                    if (whatsThere == ChessPiece.BlackQueen)
+                        moveValues.Add(baseMoveValue - captureQueen);
+                    if (whatsThere == ChessPiece.BlackKing)
+                        moveValues.Add(baseMoveValue - captureKing);
+                }
+            }
+
+            List<ChessMove> lowestValueMoves = new List<ChessMove>();
+            // Iterate through moveValues and add the move with the lowest value, clearing the list and re-making it if you find something lower.
+            int lowestValue = baseMoveValue;
+            for(int i=0; i<moves.Count; i++)
+            {
+                if(moveValues[i] < baseMoveValue)
+                {
+                    lowestValueMoves = new List<ChessMove>();
+                    lowestValue = moveValues[i];
+                }
+
+                if(moveValues[i] == lowestValue)
+                {
+                    lowestValueMoves.Add(moves[i]);
+                }
+            }
+
+            Random random = new Random();
+            int randInt = random.Next(lowestValueMoves.Count);
+            ChessMove move = lowestValueMoves[randInt];
             return move;
         }
 
