@@ -1,8 +1,5 @@
-"check" flag - need to validate if moves put us in check and not return them
-	- need to see if we are in check and move out of check
-GetValue of moves
-heuristics
-heuristics
+"check-mate" flag - must set when appropriate
+"stalemate" flag - must set when appropriate
 heuristics
 
 need to log moves to the log _Do we need to do this or is this already taken care of by the profiler(framework)?
