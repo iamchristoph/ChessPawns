@@ -42,16 +42,16 @@ namespace ChessPawnsAI
             int baseMoveValue = 500; // Magic number, figured I'd start somewhere
             List<int> moveValues = new List<int>();
             // Calculate differently based on how many pieces are left on the board for additional speed.
-
             // Right now this is just greedy
 
             // Taking a piece? Value lowers according to what piece you're taking (Queen is more important than a Pawn)
             int capturePawn = 20;
             int captureKnight = 50;
             int captureBishop = 100;
-            int captureRook = 100;
+            int captureRook = 110;
             int captureQueen = 300;
             int captureKing = baseMoveValue;
+
 
             for (int i=0; i<moves.Count;i++)
             {
@@ -91,13 +91,20 @@ namespace ChessPawnsAI
                         moveValues.Add(baseMoveValue - captureKing);
                 }
             }
-
             List<ChessMove> lowestValueMoves = new List<ChessMove>();
             // Iterate through moveValues and add the move with the lowest value, clearing the list and re-making it if you find something lower.
             int lowestValue = baseMoveValue;
+
             for(int i=0; i<moves.Count; i++)
             {
-                if(moveValues[i] < baseMoveValue)
+                // If the move would put you in check, ignore it.
+                /*
+                if (IsCheck(board, moves[i], FindKing(board, myColor), myColor))
+                {
+                    continue;
+                }
+                */
+                if (moveValues[i] < lowestValue)
                 {
                     lowestValueMoves = new List<ChessMove>();
                     lowestValue = moveValues[i];
@@ -105,10 +112,13 @@ namespace ChessPawnsAI
 
                 if(moveValues[i] == lowestValue)
                 {
+                    // If the move would put you in check, ignore it.
+
                     lowestValueMoves.Add(moves[i]);
                 }
             }
-
+            Log("There are " + moves.Count + " possible moves, with " + lowestValueMoves.Count + " moves that seem decent");
+            
             Random random = new Random();
             int randInt = random.Next(lowestValueMoves.Count);
             ChessMove move = lowestValueMoves[randInt];
@@ -230,6 +240,7 @@ namespace ChessPawnsAI
                         }
                 }
             }
+            
             // (If we need more speed, move these methods up to GetAllMoves to avoid repeating it too much--
             // king location is needed to check for check)
             ChessLocation king = FindKing(board, myColor);
