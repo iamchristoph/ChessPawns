@@ -59,6 +59,10 @@ namespace ChessPawnsAI
         {
             List<ChessMove> moves = GetAllMoves(board, myColor);
             GetCheckMate(moves, board, myColor);
+            if (moves.Count < 1)
+            {
+                return new ChessMove(new ChessLocation(0, 0), new ChessLocation(0, 0), ChessFlag.Stalemate);
+            }
 
             int baseMoveValue = 500; // Magic number, figured I'd start somewhere
             List<int> moveValues = new List<int>();
@@ -313,6 +317,7 @@ namespace ChessPawnsAI
         public bool IsValidMove(ChessBoard boardBeforeMove, ChessMove moveToCheck, ChessColor colorOfPlayerMoving)
         {
             List<ChessMove> validMoves = GetAllMoves(boardBeforeMove, colorOfPlayerMoving);
+            GetCheckMate(validMoves, boardBeforeMove, colorOfPlayerMoving);
             return validMoves.Contains(moveToCheck);
         }
 
