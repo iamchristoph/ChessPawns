@@ -749,8 +749,7 @@ namespace ChessPawnsAI
                     king = FindKing(board, color);
                 }
             }
-            //Console.WriteLine("InCheck method, color: " + color);
-            //// Checks for knights within range
+            // Checks for knights within range
             if (InCheckFromKnight(board, king, color))
             {
                 return true;
@@ -1065,24 +1064,23 @@ namespace ChessPawnsAI
 
         private ChessLocation FindKing(ChessBoard board, ChessColor myColor)
         {
+            ChessPiece king;
+            if (myColor == ChessColor.White)
+            {
+                king = ChessPiece.WhiteKing;
+            }
+            else // black
+            {
+                king = ChessPiece.BlackKing;
+            }
             for (int i = 0; i < 8; i++)
             {
                 for (int j = 0; j < 8; j++)
                 {
                     ChessPiece current = board[i, j];
-                    if (myColor == ChessColor.White)
+                    if (current == king)
                     {
-                        if (current == ChessPiece.WhiteKing)
-                        {
-                            return new ChessLocation(i, j);
-                        }
-                    }
-                    else
-                    {
-                        if (current == ChessPiece.BlackKing)
-                        {
-                            return new ChessLocation(i, j);
-                        }
+                        return new ChessLocation(i, j);
                     }
                 }
             }
