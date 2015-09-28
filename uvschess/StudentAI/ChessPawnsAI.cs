@@ -55,109 +55,97 @@ namespace ChessPawnsAI
             }
         }
 
-        public ChessMove GetStrategicMove(ChessBoard board, ChessColor myColor)
+        public void GetMoveValue(ChessMove move, ChessBoard board)
         {
-            List<ChessMove> moves = GetAllMoves(board, myColor);
-            GetCheckMate(moves, board, myColor);
-            if (moves.Count < 1)
-            {
-                return new ChessMove(new ChessLocation(0, 0), new ChessLocation(0, 0), ChessFlag.Stalemate);
-            }
-
-            int baseMoveValue = 500; // Magic number, figured I'd start somewhere
-            List<int> moveValues = new List<int>();
-            // Calculate differently based on how many pieces are left on the board for additional speed.
-            // Right now this is just greedy
-
             // Taking a piece? Value lowers according to what piece you're taking (Queen is more important than a Pawn)
+            int baseMoveValue = 1000;
             int capturePawn = 20;
             int captureKnight = 50;
             int captureBishop = 100;
             int captureRook = 110;
             int captureQueen = 350;
             int check = 300;
-            int captureKing = baseMoveValue;
+            int checkMate = baseMoveValue;
 
+            ChessLocation destination = move.To;
+            ChessPiece whatsThere = board[destination];
 
-            for (int i=0; i<moves.Count;i++)
+            int value = baseMoveValue;
+
+            if (move.Flag == ChessFlag.Check)
+                move.ValueOfMove -= check;
+            if (move.Flag == ChessFlag.Checkmate)
+                move.ValueOfMove -= checkMate;
+            if (whatsThere == ChessPiece.WhitePawn || whatsThere == ChessPiece.BlackPawn)
+                move.ValueOfMove -= capturePawn;
+            else if (whatsThere == ChessPiece.WhiteKnight || whatsThere == ChessPiece.BlackKnight)
+                move.ValueOfMove -= captureKnight;
+            else if (whatsThere == ChessPiece.WhiteBishop || whatsThere == ChessPiece.BlackBishop)
+                move.ValueOfMove -= captureBishop;
+            else if (whatsThere == ChessPiece.WhiteRook || whatsThere == ChessPiece.BlackRook)
+                move.ValueOfMove -= captureRook;
+            else if (whatsThere == ChessPiece.WhiteQueen || whatsThere == ChessPiece.BlackQueen)
+                move.ValueOfMove -= captureQueen;
+
+        }
+        
+
+        public ChessMove GetStrategicMove(ChessBoard board, ChessColor myColor)
+        {
+            List<ChessMove> moves = GetAllMoves(board, myColor);
+            GetCheckMate(moves, board, myColor);
+            if (moves.Count < 1) // if we are in stalemate
             {
-                ChessLocation destination = moves[i].To;
-                ChessPiece whatsThere = board[destination];
-
-                int value = baseMoveValue;
-
-                if (moves[i].Flag == ChessFlag.Check)
-                {
-                    moveValues.Add(baseMoveValue - check);
-                }
-                else
-                {
-                    if (whatsThere == ChessPiece.Empty)
-                        moveValues.Add(baseMoveValue);
-                    if (myColor == ChessColor.Black)
-                    {
-                        if (whatsThere == ChessPiece.WhitePawn)
-                            moveValues.Add(baseMoveValue - capturePawn);
-                        if (whatsThere == ChessPiece.WhiteKnight)
-                            moveValues.Add(baseMoveValue - captureKnight);
-                        if (whatsThere == ChessPiece.WhiteBishop)
-                            moveValues.Add(baseMoveValue - captureBishop);
-                        if (whatsThere == ChessPiece.WhiteRook)
-                            moveValues.Add(baseMoveValue - captureRook);
-                        if (whatsThere == ChessPiece.WhiteQueen)
-                            moveValues.Add(baseMoveValue - captureQueen);
-                        if (whatsThere == ChessPiece.WhiteKing)
-                            moveValues.Add(baseMoveValue - captureKing);
-                    }
-                    else
-                    {
-                        if (whatsThere == ChessPiece.BlackPawn)
-                            moveValues.Add(baseMoveValue - capturePawn);
-                        if (whatsThere == ChessPiece.BlackKnight)
-                            moveValues.Add(baseMoveValue - captureKnight);
-                        if (whatsThere == ChessPiece.BlackBishop)
-                            moveValues.Add(baseMoveValue - captureBishop);
-                        if (whatsThere == ChessPiece.BlackRook)
-                            moveValues.Add(baseMoveValue - captureRook);
-                        if (whatsThere == ChessPiece.BlackQueen)
-                            moveValues.Add(baseMoveValue - captureQueen);
-                        if (whatsThere == ChessPiece.BlackKing)
-                            moveValues.Add(baseMoveValue - captureKing);
-                    }
-                }
+                return new ChessMove(new ChessLocation(0, 0), new ChessLocation(0, 0), ChessFlag.Stalemate);
             }
-            List<ChessMove> lowestValueMoves = new List<ChessMove>();
-            // Iterate through moveValues and add the move with the lowest value, clearing the list and re-making it if you find something lower.
-            int lowestValue = baseMoveValue;
 
-            for(int i=0; i<moves.Count; i++)
+            
+
+            int baseMoveValue = 1000; // Magic number, figured I'd start somewhere
+            List<int> moveValues = new List<int>();
+            // Calculate differently based on how many pieces are left on the board for additional speed.
+            // Right now this is just greedy
+
+            // Taking a piece? Value lowers according to what piece you're taking (Queen is more important than a Pawn)
+            
+            foreach (ChessMove move in moves)
             {
-                // If the move would put you in check, ignore it.
-                /*
-                if (IsCheck(board, moves[i], FindKing(board, myColor), myColor))
-                {
-                    continue;
-                }
-                */
-                if (moveValues[i] < lowestValue)
-                {
-                    lowestValueMoves = new List<ChessMove>();
-                    lowestValue = moveValues[i];
-                }
-
-                if(moveValues[i] == lowestValue)
-                {
-                    // If the move would put you in check, ignore it.
-
-                    lowestValueMoves.Add(moves[i]);
-                }
+                GetMoveValue(move, board);
             }
-            Log("There are " + moves.Count + " possible moves, with " + lowestValueMoves.Count + " moves that seem decent");
+            Log("Got MoveValues");
+            List<ChessMove> bestMoves = getBestMoves(moves);
+
+
+            
+            Log("There are " + moves.Count + " possible moves, with " + bestMoves.Count + " moves that seem decent");
             
             Random random = new Random();
-            int randInt = random.Next(lowestValueMoves.Count);
-            ChessMove move = lowestValueMoves[randInt];
-            return move;
+            int randInt = random.Next(bestMoves.Count);
+            return bestMoves[randInt];
+        }
+
+        public List<ChessMove> getBestMoves(List<ChessMove> allMoves)
+        {
+            List<ChessMove> bestMoves = new List<ChessMove>();
+            // Iterate through moveValues and add the move with the lowest value, clearing the list and re-making it if you find something lower.
+            int lowestValue = 1000;
+            int numMoves = 1;
+            for (int i = 0; i < allMoves.Count; ++i)
+            {
+                if (allMoves[i].ValueOfMove < lowestValue)
+                {
+                    numMoves = 1;
+                    bestMoves.Add(allMoves[i]);
+                    lowestValue = allMoves[i].ValueOfMove;
+                }
+                else if (allMoves[i].ValueOfMove == lowestValue)
+                {
+                    bestMoves.Add(allMoves[i]);
+                    ++numMoves;
+                }
+            }
+            bestMoves.Reverse();
+            return bestMoves.GetRange(0, numMoves);
         }
 
         /// <summary>
