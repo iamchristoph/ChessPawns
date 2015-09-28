@@ -33,12 +33,32 @@ namespace ChessPawnsAI
             //ChessMove move = GetRndMove(board, myColor);
             //return new ChessMove(new ChessLocation(0, 0), new ChessLocation(0, 0), ChessFlag.);
             ChessMove move = GetStrategicMove(board, myColor);
+
             return move;
+        }
+
+        public void GetCheckMate(List<ChessMove> moves, ChessBoard board, ChessColor myColor)
+        {
+
+            foreach (ChessMove move in moves)
+            {
+                if (move.Flag == ChessFlag.Check)
+                {
+                    ChessBoard testBoard = board.Clone();
+                    testBoard.MakeMove(move);
+                    List<ChessMove> checkMoves = GetAllMoves(testBoard, OtherColor(myColor));
+                    if (checkMoves.Count < 1)
+                    {
+                        move.Flag = ChessFlag.Checkmate;
+                    }
+                }
+            }
         }
 
         public ChessMove GetStrategicMove(ChessBoard board, ChessColor myColor)
         {
             List<ChessMove> moves = GetAllMoves(board, myColor);
+            GetCheckMate(moves, board, myColor);
 
             int baseMoveValue = 500; // Magic number, figured I'd start somewhere
             List<int> moveValues = new List<int>();
@@ -50,8 +70,8 @@ namespace ChessPawnsAI
             int captureKnight = 50;
             int captureBishop = 100;
             int captureRook = 110;
-            int captureQueen = 300;
-            int check = 350;
+            int captureQueen = 350;
+            int check = 300;
             int captureKing = baseMoveValue;
 
 
@@ -62,41 +82,44 @@ namespace ChessPawnsAI
 
                 int value = baseMoveValue;
 
-                if(moves[i].Flag == ChessFlag.Check)
+                if (moves[i].Flag == ChessFlag.Check)
                 {
                     moveValues.Add(baseMoveValue - check);
                 }
-                if (whatsThere == ChessPiece.Empty)
-                    moveValues.Add(baseMoveValue);
-                if (myColor == ChessColor.Black)
-                {
-                    if (whatsThere == ChessPiece.WhitePawn)
-                        moveValues.Add(baseMoveValue - capturePawn);
-                    if (whatsThere == ChessPiece.WhiteKnight)
-                        moveValues.Add(baseMoveValue - captureKnight);
-                    if (whatsThere == ChessPiece.WhiteBishop)
-                        moveValues.Add(baseMoveValue - captureBishop);
-                    if (whatsThere == ChessPiece.WhiteRook)
-                        moveValues.Add(baseMoveValue - captureRook);
-                    if (whatsThere == ChessPiece.WhiteQueen)
-                        moveValues.Add(baseMoveValue - captureQueen);
-                    if (whatsThere == ChessPiece.WhiteKing)
-                        moveValues.Add(baseMoveValue - captureKing);
-                }
                 else
                 {
-                    if (whatsThere == ChessPiece.BlackPawn)
-                        moveValues.Add(baseMoveValue - capturePawn);
-                    if (whatsThere == ChessPiece.BlackKnight)
-                        moveValues.Add(baseMoveValue - captureKnight);
-                    if (whatsThere == ChessPiece.BlackBishop)
-                        moveValues.Add(baseMoveValue - captureBishop);
-                    if (whatsThere == ChessPiece.BlackRook)
-                        moveValues.Add(baseMoveValue - captureRook);
-                    if (whatsThere == ChessPiece.BlackQueen)
-                        moveValues.Add(baseMoveValue - captureQueen);
-                    if (whatsThere == ChessPiece.BlackKing)
-                        moveValues.Add(baseMoveValue - captureKing);
+                    if (whatsThere == ChessPiece.Empty)
+                        moveValues.Add(baseMoveValue);
+                    if (myColor == ChessColor.Black)
+                    {
+                        if (whatsThere == ChessPiece.WhitePawn)
+                            moveValues.Add(baseMoveValue - capturePawn);
+                        if (whatsThere == ChessPiece.WhiteKnight)
+                            moveValues.Add(baseMoveValue - captureKnight);
+                        if (whatsThere == ChessPiece.WhiteBishop)
+                            moveValues.Add(baseMoveValue - captureBishop);
+                        if (whatsThere == ChessPiece.WhiteRook)
+                            moveValues.Add(baseMoveValue - captureRook);
+                        if (whatsThere == ChessPiece.WhiteQueen)
+                            moveValues.Add(baseMoveValue - captureQueen);
+                        if (whatsThere == ChessPiece.WhiteKing)
+                            moveValues.Add(baseMoveValue - captureKing);
+                    }
+                    else
+                    {
+                        if (whatsThere == ChessPiece.BlackPawn)
+                            moveValues.Add(baseMoveValue - capturePawn);
+                        if (whatsThere == ChessPiece.BlackKnight)
+                            moveValues.Add(baseMoveValue - captureKnight);
+                        if (whatsThere == ChessPiece.BlackBishop)
+                            moveValues.Add(baseMoveValue - captureBishop);
+                        if (whatsThere == ChessPiece.BlackRook)
+                            moveValues.Add(baseMoveValue - captureRook);
+                        if (whatsThere == ChessPiece.BlackQueen)
+                            moveValues.Add(baseMoveValue - captureQueen);
+                        if (whatsThere == ChessPiece.BlackKing)
+                            moveValues.Add(baseMoveValue - captureKing);
+                    }
                 }
             }
             List<ChessMove> lowestValueMoves = new List<ChessMove>();
@@ -163,6 +186,8 @@ namespace ChessPawnsAI
                     moves.AddRange(GetMove(board, new ChessLocation(i, j), myColor)); // for each location add the valid moves
                 }
             }
+
+
             return moves;
         }
 
@@ -263,6 +288,7 @@ namespace ChessPawnsAI
                 }
                 
             }
+
             
             // Flag any moves that put our opponent in check
             foreach (ChessMove move in myMoves)
@@ -272,6 +298,7 @@ namespace ChessPawnsAI
                     move.Flag = ChessFlag.Check;
                 }
             }
+
             return myMoves;
         }
 
