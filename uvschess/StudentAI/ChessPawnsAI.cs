@@ -64,7 +64,7 @@ namespace ChessPawnsAI
             int captureBishop = 100;
             int captureRook = 110;
             int captureQueen = 350;
-            int check = 20;
+            int check = 0;
             int checkMate = baseMoveValue;
 
             ChessLocation destination = move.To;
@@ -126,19 +126,17 @@ namespace ChessPawnsAI
             {
                 GetMoveValue(move, board);
             }
-            if (moves.Count < 20)
+
+            foreach (ChessMove move in moves)
             {
-                foreach (ChessMove move in moves)
-                {
-                    ChessBoard tBoard = board.Clone();
-                    tBoard.MakeMove(move);
-                    move.ValueOfMove += (GetStrategicMove(tBoard, OtherColor(myColor)).ValueOfMove);
-                }
+                ChessBoard tBoard = board.Clone();
+                tBoard.MakeMove(move);
+                move.ValueOfMove -= (GetStrategicMove(tBoard, OtherColor(myColor)).ValueOfMove);
             }
 
             List<ChessMove> bestMoves = getBestMoves(moves);
 
-            //Log("There are " + moves.Count + " possible moves, with " + bestMoves.Count + " moves that seem decent.");
+            Log("There are " + moves.Count + " possible moves, with " + bestMoves.Count + " moves that seem decent.");
 
             Random random = new Random();
             int randInt = random.Next(bestMoves.Count);
