@@ -157,21 +157,21 @@ namespace ChessPawnsAI
             ChessLocation king = FindKing(board, myColor);
             ChessLocation otherKing = FindKing(board, OtherColor(myColor));
             // Eliminate any moves that put us into check
-            //for (int i = moves.Count - 1; i >= 0; --i)
-            //{
-            //    if (IsCheck(board, moves[i], king, myColor))
-            //    {
-            //        moves.RemoveAt(i);
-            //    }
-            //}
-            //// Flag any moves that put our opponent in check
-            //foreach (ChessMove move in moves)
-            //{
-            //    if (IsCheck(board, move, otherKing, OtherColor(myColor)))
-            //    {
-            //        move.Flag = ChessFlag.Check;
-            //    }
-            //}
+            for (int i = moves.Count - 1; i >= 0; --i)
+            {
+                if (IsCheck(board, moves[i], king, myColor))
+                {
+                    moves.RemoveAt(i);
+                }
+            }
+            // Flag any moves that put our opponent in check
+            foreach (ChessMove move in moves)
+            {
+                if (IsCheck(board, move, otherKing, OtherColor(myColor)))
+                {
+                    move.Flag = ChessFlag.Check;
+                }
+            }
             return moves;
         }
 
