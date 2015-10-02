@@ -44,7 +44,7 @@ namespace ChessPawnsAI
         {
             ChessBoard board = b.Clone();
             board.MakeMove(move);
-            ChessColor other = OtherColor(color);
+            int val = 0;
             // Values based on https://en.wikipedia.org/wiki/Chess_piece_relative_value#Hans_Berliner.27s_system
             int pawn = 100;
             int knight = 320;
@@ -52,7 +52,9 @@ namespace ChessPawnsAI
             int rook = 510;
             int queen = 880;
             int king = 10000;
-            int val = 0;
+
+            int check = 1000;
+            int checkMate = 9000;
             for (int x = 0; x < 8; x++)
             {
                 for (int y = 0; y < 8; y++)
@@ -116,6 +118,10 @@ namespace ChessPawnsAI
                     }
                 }
             }
+            if (move.Flag == ChessFlag.Check)
+                val += check;
+            if (move.Flag == ChessFlag.Checkmate)
+                val += checkMate;
             move.ValueOfMove = val;
         }
 
@@ -222,14 +228,18 @@ namespace ChessPawnsAI
                 {
                     bestMoves.Add(allMoves[i]);
                 }
-                if (allMoves[i].ValueOfMove > bestVal)
+                else if (allMoves[i].ValueOfMove > bestVal)
                 {
                     // Then Sort didn't work
                     Log("Sort didn't work; revamp GetBestMoves method");
                 }
-                // TODO: if sort works, then break out of this loop when we get a value less than bestVal
+                // if sort works, then break out of this loop when we get a value less than bestVal
+                else
+                {
+                    continue;
+                }
             }
-
+            // This is the lowest-value-is-best code:
             //// Iterate through moveValues and add the move with the lowest value, 
             //// clearing the list and re-making it if you find something lower.
             //int lowestValue = 10000;
