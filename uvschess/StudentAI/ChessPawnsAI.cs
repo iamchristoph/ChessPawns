@@ -37,6 +37,89 @@ namespace ChessPawnsAI
             return move;
         }
 
+        // Like GetMoveValue, EvaluateBoard sets the ValueOfMove property of the ChessMove object
+        // But it does so by evaluating the whole board.
+        // A higher (more positive) integer means a better move.
+        public void EvaluateBoard(ChessMove move, ChessBoard b, ChessColor color)
+        {
+            ChessBoard board = b.Clone();
+            board.MakeMove(move);
+            ChessColor other = OtherColor(color);
+            // Values based on https://en.wikipedia.org/wiki/Chess_piece_relative_value#Hans_Berliner.27s_system
+            int pawn = 100;
+            int knight = 320;
+            int bishop = 333;
+            int rook = 510;
+            int queen = 880;
+            int king = 10000;
+            int val = 0;
+            for (int x = 0; x < 8; x++)
+            {
+                for (int y = 0; y < 8; y++)
+                {
+                    ChessPiece piece = board[x, y];
+                    // Add the values of my pieces
+                    if (color == Color(piece))
+                    {
+                        if ((piece == ChessPiece.WhitePawn) || (piece == ChessPiece.BlackPawn))
+                        {
+                            val += pawn;
+                        }
+                        else if ((piece == ChessPiece.WhiteKnight) || (piece == ChessPiece.BlackKnight))
+                        {
+                            val += knight;
+                        }
+                        else if ((piece == ChessPiece.WhiteBishop) || (piece == ChessPiece.BlackBishop))
+                        {
+                            val += bishop;
+                        }
+                        else if ((piece == ChessPiece.WhiteRook) || (piece == ChessPiece.BlackRook))
+                        {
+                            val += rook;
+                        }
+                        else if ((piece == ChessPiece.WhiteQueen) || (piece == ChessPiece.BlackQueen))
+                        {
+                            val += queen;
+                        }
+                        else if ((piece == ChessPiece.WhiteKing) || (piece == ChessPiece.BlackKing))
+                        {
+                            val += king;
+                        }
+                        // or it's empty; then don't add anything
+                    }
+                    else // subtract the value of the opponent's pieces
+                    {
+                        if ((piece == ChessPiece.WhitePawn) || (piece == ChessPiece.BlackPawn))
+                        {
+                            val -= pawn;
+                        }
+                        else if ((piece == ChessPiece.WhiteKnight) || (piece == ChessPiece.BlackKnight))
+                        {
+                            val -= knight;
+                        }
+                        else if ((piece == ChessPiece.WhiteBishop) || (piece == ChessPiece.BlackBishop))
+                        {
+                            val -= bishop;
+                        }
+                        else if ((piece == ChessPiece.WhiteRook) || (piece == ChessPiece.BlackRook))
+                        {
+                            val -= rook;
+                        }
+                        else if ((piece == ChessPiece.WhiteQueen) || (piece == ChessPiece.BlackQueen))
+                        {
+                            val -= queen;
+                        }
+                        else if ((piece == ChessPiece.WhiteKing) || (piece == ChessPiece.BlackKing))
+                        {
+                            val -= king;
+                        }
+                    }
+
+                }
+            }
+            move.ValueOfMove = val;
+        }
+
         public void GetMoveValue(ChessMove move, ChessBoard board)
         {
             // Taking a piece? Value lowers according to what piece you're taking (Queen is more important than a Pawn)
@@ -126,7 +209,8 @@ namespace ChessPawnsAI
         public List<ChessMove> getBestMoves(List<ChessMove> allMoves)
         {
             List<ChessMove> bestMoves = new List<ChessMove>();
-            // Iterate through moveValues and add the move with the lowest value, clearing the list and re-making it if you find something lower.
+            // Iterate through moveValues and add the move with the lowest value, 
+            // clearing the list and re-making it if you find something lower.
             int lowestValue = 10000;
             int numMoves = 1;
             for (int i = 0; i < allMoves.Count; ++i)
