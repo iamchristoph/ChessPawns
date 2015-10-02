@@ -37,24 +37,6 @@ namespace ChessPawnsAI
             return move;
         }
 
-        public void GetCheckMate(List<ChessMove> moves, ChessBoard board, ChessColor myColor)
-        {
-
-            foreach (ChessMove move in moves)
-            {
-                if (move.Flag == ChessFlag.Check)
-                {
-                    ChessBoard testBoard = board.Clone();
-                    testBoard.MakeMove(move);
-                    List<ChessMove> checkMoves = GetAllMoves(testBoard, OtherColor(myColor));
-                    if (checkMoves.Count < 1)
-                    {
-                        move.Flag = ChessFlag.Checkmate;
-                    }
-                }
-            }
-        }
-
         public void GetMoveValue(ChessMove move, ChessBoard board)
         {
             // Taking a piece? Value lowers according to what piece you're taking (Queen is more important than a Pawn)
@@ -93,7 +75,6 @@ namespace ChessPawnsAI
         public ChessMove GetStrategicMove(ChessBoard board, ChessColor myColor)
         {
             List<ChessMove> moves = GetAllMoves(board, myColor);
-//            GetCheckMate(moves, board, myColor);
             if (moves.Count < 1) // if we are in stalemate
             {
                 return new ChessMove(new ChessLocation(0, 0), new ChessLocation(0, 0), ChessFlag.Stalemate);
@@ -116,7 +97,6 @@ namespace ChessPawnsAI
         public ChessMove GetLookAheadMove(ChessBoard board, ChessColor myColor)
         {
             List<ChessMove> moves = GetAllMoves(board, myColor);
-//            GetCheckMate(moves, board, myColor);
             if (moves.Count < 1) // if we are in stalemate
             {
                 return new ChessMove(new ChessLocation(0, 0), new ChessLocation(0, 0), ChessFlag.Stalemate);
@@ -327,7 +307,6 @@ namespace ChessPawnsAI
         public bool IsValidMove(ChessBoard boardBeforeMove, ChessMove moveToCheck, ChessColor colorOfPlayerMoving)
         {
             List<ChessMove> validMoves = GetAllMoves(boardBeforeMove, colorOfPlayerMoving);
- //           GetCheckMate(validMoves, boardBeforeMove, colorOfPlayerMoving);
             return validMoves.Contains(moveToCheck);
         }
 
@@ -728,6 +707,24 @@ namespace ChessPawnsAI
         public static ChessColor Color(ChessPiece piece)
         {
             return piece > ChessPiece.Empty ? ChessColor.White : ChessColor.Black;
+        }
+
+        public void GetCheckMate(List<ChessMove> moves, ChessBoard board, ChessColor myColor)
+        {
+
+            foreach (ChessMove move in moves)
+            {
+                if (move.Flag == ChessFlag.Check)
+                {
+                    ChessBoard testBoard = board.Clone();
+                    testBoard.MakeMove(move);
+                    List<ChessMove> checkMoves = GetAllMoves(testBoard, OtherColor(myColor));
+                    if (checkMoves.Count < 1)
+                    {
+                        move.Flag = ChessFlag.Checkmate;
+                    }
+                }
+            }
         }
 
         // IsCheck function answers the question:
