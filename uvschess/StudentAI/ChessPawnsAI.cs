@@ -93,7 +93,7 @@ namespace ChessPawnsAI
         public ChessMove GetStrategicMove(ChessBoard board, ChessColor myColor)
         {
             List<ChessMove> moves = GetAllMoves(board, myColor);
-            GetCheckMate(moves, board, myColor);
+//            GetCheckMate(moves, board, myColor);
             if (moves.Count < 1) // if we are in stalemate
             {
                 return new ChessMove(new ChessLocation(0, 0), new ChessLocation(0, 0), ChessFlag.Stalemate);
@@ -116,7 +116,7 @@ namespace ChessPawnsAI
         public ChessMove GetLookAheadMove(ChessBoard board, ChessColor myColor)
         {
             List<ChessMove> moves = GetAllMoves(board, myColor);
-            GetCheckMate(moves, board, myColor);
+//            GetCheckMate(moves, board, myColor);
             if (moves.Count < 1) // if we are in stalemate
             {
                 return new ChessMove(new ChessLocation(0, 0), new ChessLocation(0, 0), ChessFlag.Stalemate);
@@ -310,6 +310,9 @@ namespace ChessPawnsAI
                 }
             }
 
+            // Flag any moves that put our opponent in checkmate
+            GetCheckMate(myMoves, board, myColor);
+
             return myMoves;
         }
 
@@ -324,7 +327,7 @@ namespace ChessPawnsAI
         public bool IsValidMove(ChessBoard boardBeforeMove, ChessMove moveToCheck, ChessColor colorOfPlayerMoving)
         {
             List<ChessMove> validMoves = GetAllMoves(boardBeforeMove, colorOfPlayerMoving);
-            GetCheckMate(validMoves, boardBeforeMove, colorOfPlayerMoving);
+ //           GetCheckMate(validMoves, boardBeforeMove, colorOfPlayerMoving);
             return validMoves.Contains(moveToCheck);
         }
 
