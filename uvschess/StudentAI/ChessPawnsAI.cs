@@ -15,7 +15,7 @@ namespace ChessPawnsAI
         public string Name
         {
 #if DEBUG
-            get { return "ChessPawnsAI (Greedy)"; }
+            get { return "ChessPawnsAI (Greedy Evaluate Board)"; }
 #else
             get { return "ChessPawnsAI"; }
 #endif
@@ -114,7 +114,6 @@ namespace ChessPawnsAI
                             val -= king;
                         }
                     }
-
                 }
             }
             move.ValueOfMove = val;
@@ -165,7 +164,8 @@ namespace ChessPawnsAI
             
             foreach (ChessMove move in moves)
             {
-                GetMoveValue(move, board);
+                EvaluateBoard(move, board, myColor);
+ //               GetMoveValue(move, board);
             }
             
             List<ChessMove> bestMoves = getBestMoves(moves);
@@ -187,7 +187,8 @@ namespace ChessPawnsAI
 
             foreach (ChessMove move in moves)
             {
-                GetMoveValue(move, board);
+                EvaluateBoard(move, board, myColor);
+//                GetMoveValue(move, board);
             }
 
             foreach (ChessMove move in moves)
@@ -209,26 +210,47 @@ namespace ChessPawnsAI
         public List<ChessMove> getBestMoves(List<ChessMove> allMoves)
         {
             List<ChessMove> bestMoves = new List<ChessMove>();
-            // Iterate through moveValues and add the move with the lowest value, 
-            // clearing the list and re-making it if you find something lower.
-            int lowestValue = 10000;
-            int numMoves = 1;
-            for (int i = 0; i < allMoves.Count; ++i)
+            allMoves.Sort();
+            // If Sort works the way it should, the last item should be the highest value move
+            // Add the last item
+            bestMoves.Add(allMoves[allMoves.Count - 1]);
+            int bestVal = (allMoves[allMoves.Count - 1]).ValueOfMove;
+            // Start from 2nd to last item and iterate backwards
+            for (int i = allMoves.Count - 2; i >= 0; i--)
             {
-                if (allMoves[i].ValueOfMove < lowestValue)
-                {
-                    numMoves = 1;
-                    bestMoves.Add(allMoves[i]);
-                    lowestValue = allMoves[i].ValueOfMove;
-                }
-                else if (allMoves[i].ValueOfMove == lowestValue)
+                if (allMoves[i].ValueOfMove == bestVal)
                 {
                     bestMoves.Add(allMoves[i]);
-                    ++numMoves;
                 }
+                if (allMoves[i].ValueOfMove > bestVal)
+                {
+                    // Then Sort didn't work
+                    Log("Sort didn't work; revamp GetBestMoves method");
+                }
+                // TODO: if sort works, then break out of this loop when we get a value less than bestVal
             }
-            bestMoves.Reverse();
-            return bestMoves.GetRange(0, numMoves);
+
+            //// Iterate through moveValues and add the move with the lowest value, 
+            //// clearing the list and re-making it if you find something lower.
+            //int lowestValue = 10000;
+            //int numMoves = 1;
+            //for (int i = 0; i < allMoves.Count; ++i)
+            //{
+            //    if (allMoves[i].ValueOfMove < lowestValue)
+            //    {
+            //        numMoves = 1;
+            //        bestMoves.Add(allMoves[i]);
+            //        lowestValue = allMoves[i].ValueOfMove;
+            //    }
+            //    else if (allMoves[i].ValueOfMove == lowestValue)
+            //    {
+            //        bestMoves.Add(allMoves[i]);
+            //        ++numMoves;
+            //    }
+            //}
+            //bestMoves.Reverse();
+            //return bestMoves.GetRange(0, numMoves);
+            return bestMoves;
         }
 
         /// <summary>
