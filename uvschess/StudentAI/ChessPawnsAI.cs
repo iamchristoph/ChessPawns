@@ -38,14 +38,57 @@ namespace ChessPawnsAI
             return move;
         }
 
-        // Like GetMoveValue, EvaluateBoard sets the ValueOfMove property of the ChessMove object
-        // But it does so by evaluating the whole board.
+        // Fail-soft alpha-beta pruning
+        // Based on psueudocode at https://en.wikipedia.org/wiki/Alpha%E2%80%93beta_pruning
+        public int AlphaBeta(ChessMove move, ChessBoard b, ChessColor color, int depth, int alpha, int beta, bool maximizingPlayer)
+        {
+            int bestVal = 0;
+            // if depth is 0 or node is a terminal node
+            if ((depth == 0) || (move.Flag == ChessFlag.Checkmate))
+            {
+                return EvaluateBoard(move, b, color);
+            }
+            ChessBoard board = b.Clone();
+            board.MakeMove(move);
+            List<ChessMove> children = GetAllMoves(board, color);
+            if (maximizingPlayer)
+            {
+                bestVal = int.MinValue;
+                foreach(ChessMove child in children)
+                {
+                    bestVal = Math.Max(bestVal, AlphaBeta(child, board, color, depth - 1, alpha, beta, false));
+                    alpha = Math.Max(alpha, bestVal);
+                    if (beta <= alpha)
+                        break;
+                }
+                return bestVal;
+            }
+            else
+            {
+                bestVal = int.MaxValue;
+                foreach (ChessMove child in children)
+                {
+                    bestVal = Math.Min(bestVal, AlphaBeta(child, board, color, depth - 1, alpha, beta, true));
+                    beta = Math.Min(beta, bestVal);
+                    if (beta <= alpha)
+                        break;
+                }
+                return bestVal;
+            }
+        }
+
+        //public int EvaluateBoard(ChessMove move, ChessBoard b, ChessColor color)
+        //{
+        //    ChessBoard board = b.Clone();
+        //    board.MakeMove(move);
+        //    return EvaluateBoard(board, color);
+        //}
+
         // A higher (more positive) integer means a better move.
         public int EvaluateBoard(ChessMove move, ChessBoard b, ChessColor color)
         {
             ChessBoard board = b.Clone();
             board.MakeMove(move);
-//            ChessColor other = OtherColor(color);
             int val = 0;
             // Values based on https://en.wikipedia.org/wiki/Chess_piece_relative_value#Hans_Berliner.27s_system
             int pawn = 100;
