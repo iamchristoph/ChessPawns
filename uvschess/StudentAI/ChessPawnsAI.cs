@@ -15,7 +15,7 @@ namespace ChessPawnsAI
         public string Name
         {
 #if DEBUG
-            get { return "ChessPawnsAI (Greedy Evaluate Board)"; }
+            get { return "ChessPawnsAI (MiniMax Evaluate Board)"; }
 #else
             get { return "ChessPawnsAI"; }
 #endif
@@ -34,14 +34,48 @@ namespace ChessPawnsAI
             //return new ChessMove(new ChessLocation(0, 0), new ChessLocation(0, 0), ChessFlag.);
             //move = GetStrategicMove(board, myColor);
             bool oldHeuristic = false;
-            move = GetLookAheadMove(board, myColor, oldHeuristic);
+            // move = GetLookAheadMove(board, myColor, oldHeuristic);
+            move = GetAlphaBetaMove(board, myColor, oldHeuristic);
             return move;
+        }
+
+        public ChessMove GetAlphaBetaMove(ChessBoard board, ChessColor myColor, bool oldHeuristic) 
+        {
+            List<ChessMove> moves = GetAllMoves(board, myColor);
+            if (moves.Count < 1) // if we are in stalemate
+            {
+                return new ChessMove(new ChessLocation(0, 0), new ChessLocation(0, 0), ChessFlag.Stalemate);
+            }
+            foreach (ChessMove move in moves)
+            {
+                move.ValueOfMove = AlphaBeta(move, board, myColor, 2, int.MinValue, int.MaxValue, true);
+            }
+            
+            List<ChessMove> bestMoves;
+
+            if (oldHeuristic)
+            {
+                bestMoves = GetLowestMoves(moves);
+            }
+            else
+            {
+                bestMoves = GetHighestMoves(moves);
+            }
+
+            Log("There are " + moves.Count + " possible moves, with " + bestMoves.Count + " moves that seem decent.");
+
+            Random random = new Random();
+            int randInt = random.Next(bestMoves.Count);
+            return bestMoves[randInt];
         }
 
         // Minimax with fail-soft alpha-beta pruning
         // Based on psueudocode at https://en.wikipedia.org/wiki/Alpha%E2%80%93beta_pruning
         public int AlphaBeta(ChessMove move, ChessBoard b, ChessColor color, int depth, int alpha, int beta, bool maximizingPlayer)
         {
+#if DEBUG
+            Log("Depth = " + depth + ", alpha = " + alpha + ", beta = "+ beta);
+#endif
             int bestVal = 0;
             // if depth is 0 or node is a terminal node
             if ((depth == 0) || (move.Flag == ChessFlag.Checkmate))
@@ -53,6 +87,7 @@ namespace ChessPawnsAI
             List<ChessMove> children = GetAllMoves(board, color);
             if (maximizingPlayer)
             {
+                Log("Getting max alpha = " + alpha);
                 bestVal = int.MinValue;
                 foreach(ChessMove child in children)
                 {
@@ -65,6 +100,7 @@ namespace ChessPawnsAI
             }
             else
             {
+                Log("Getting min beta = " + beta);
                 bestVal = int.MaxValue;
                 foreach (ChessMove child in children)
                 {
@@ -904,6 +940,8 @@ namespace ChessPawnsAI
             }
         }
 
+        #region isCheck
+
         // IsCheck function answers the question:
         // Does this move, performed on this board, put this color in check?
         bool IsCheck(ChessBoard b, ChessMove move, ChessLocation king, ChessColor color)
@@ -1218,6 +1256,8 @@ namespace ChessPawnsAI
             }
             return false;
         }
+
+        #endregion
 
         bool IsValid(ChessLocation loc)
         {
