@@ -38,7 +38,7 @@ namespace ChessPawnsAI
             return move;
         }
 
-        // Fail-soft alpha-beta pruning
+        // Minimax with fail-soft alpha-beta pruning
         // Based on psueudocode at https://en.wikipedia.org/wiki/Alpha%E2%80%93beta_pruning
         public int AlphaBeta(ChessMove move, ChessBoard b, ChessColor color, int depth, int alpha, int beta, bool maximizingPlayer)
         {
