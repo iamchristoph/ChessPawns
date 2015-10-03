@@ -33,7 +33,8 @@ namespace ChessPawnsAI
             ChessMove move;// = GetRndMove(board, myColor);
             //return new ChessMove(new ChessLocation(0, 0), new ChessLocation(0, 0), ChessFlag.);
             //move = GetStrategicMove(board, myColor);
-            move = GetLookAheadMove(board, myColor);
+            bool oldHeuristic = false;
+            move = GetLookAheadMove(board, myColor, oldHeuristic);
             return move;
         }
 
@@ -125,42 +126,42 @@ namespace ChessPawnsAI
             move.ValueOfMove = val;
         }
 
-        //public void GetMoveValue(ChessMove move, ChessBoard board)
-        //{
-        //    // Taking a piece? Value lowers according to what piece you're taking (Queen is more important than a Pawn)
-        //    int baseMoveValue = 1000;
-        //    int capturePawn = 20;
-        //    int captureKnight = 50;
-        //    int captureBishop = 100;
-        //    int captureRook = 110;
-        //    int captureQueen = 350;
-        //    int check = 0;
-        //    int checkMate = baseMoveValue;
+        public void GetMoveValue(ChessMove move, ChessBoard board)
+        {
+            // Taking a piece? Value lowers according to what piece you're taking (Queen is more important than a Pawn)
+            int baseMoveValue = 1000;
+            int capturePawn = 20;
+            int captureKnight = 50;
+            int captureBishop = 100;
+            int captureRook = 110;
+            int captureQueen = 350;
+            int check = 0;
+            int checkMate = baseMoveValue;
 
-        //    ChessLocation destination = move.To;
-        //    ChessPiece whatsThere = board[destination];
+            ChessLocation destination = move.To;
+            ChessPiece whatsThere = board[destination];
 
-        //    move.ValueOfMove = baseMoveValue;
+            move.ValueOfMove = baseMoveValue;
 
-        //    if (move.Flag == ChessFlag.Check)
-        //        move.ValueOfMove -= check;
-        //    if (move.Flag == ChessFlag.Checkmate)
-        //        move.ValueOfMove -= checkMate;
-        //    if (whatsThere == ChessPiece.WhitePawn || whatsThere == ChessPiece.BlackPawn)
-        //        move.ValueOfMove -= capturePawn;
-        //    else if (whatsThere == ChessPiece.WhiteKnight || whatsThere == ChessPiece.BlackKnight)
-        //        move.ValueOfMove -= captureKnight;
-        //    else if (whatsThere == ChessPiece.WhiteBishop || whatsThere == ChessPiece.BlackBishop)
-        //        move.ValueOfMove -= captureBishop;
-        //    else if (whatsThere == ChessPiece.WhiteRook || whatsThere == ChessPiece.BlackRook)
-        //        move.ValueOfMove -= captureRook;
-        //    else if (whatsThere == ChessPiece.WhiteQueen || whatsThere == ChessPiece.BlackQueen)
-        //        move.ValueOfMove -= captureQueen;
+            if (move.Flag == ChessFlag.Check)
+                move.ValueOfMove -= check;
+            if (move.Flag == ChessFlag.Checkmate)
+                move.ValueOfMove -= checkMate;
+            if (whatsThere == ChessPiece.WhitePawn || whatsThere == ChessPiece.BlackPawn)
+                move.ValueOfMove -= capturePawn;
+            else if (whatsThere == ChessPiece.WhiteKnight || whatsThere == ChessPiece.BlackKnight)
+                move.ValueOfMove -= captureKnight;
+            else if (whatsThere == ChessPiece.WhiteBishop || whatsThere == ChessPiece.BlackBishop)
+                move.ValueOfMove -= captureBishop;
+            else if (whatsThere == ChessPiece.WhiteRook || whatsThere == ChessPiece.BlackRook)
+                move.ValueOfMove -= captureRook;
+            else if (whatsThere == ChessPiece.WhiteQueen || whatsThere == ChessPiece.BlackQueen)
+                move.ValueOfMove -= captureQueen;
 
-        //}
-        
+        }
 
-        public ChessMove GetStrategicMove(ChessBoard board, ChessColor myColor)
+
+        public ChessMove GetStrategicMove(ChessBoard board, ChessColor myColor, bool oldHeuristic)
         {
             List<ChessMove> moves = GetAllMoves(board, myColor);
             if (moves.Count < 1) // if we are in stalemate
@@ -170,41 +171,65 @@ namespace ChessPawnsAI
             
             foreach (ChessMove move in moves)
             {
-                EvaluateBoard(move, board, myColor);
- //               GetMoveValue(move, board);
+                if (oldHeuristic)
+                {
+                    GetMoveValue(move, board);
+                }
+                else
+                {
+                    EvaluateBoard(move, board, myColor);
+                }
             }
-            
-            List<ChessMove> bestMoves = getBestMoves(moves);
-                        
+            List<ChessMove> bestMoves;
+            if (oldHeuristic)
+            {
+                bestMoves = GetLowestMoves(moves);
+            }
+            else
+            {
+                bestMoves = GetHighestMoves(moves);
+            }
+
             //Log("There are " + moves.Count + " possible moves, with " + bestMoves.Count + " moves that seem decent");
-            
+
             Random random = new Random();
             int randInt = random.Next(bestMoves.Count);
             return bestMoves[randInt];
         }
 
-        public ChessMove GetLookAheadMove(ChessBoard board, ChessColor myColor)
+        public ChessMove GetLookAheadMove(ChessBoard board, ChessColor myColor, bool oldHeuristic)
         {
             List<ChessMove> moves = GetAllMoves(board, myColor);
             if (moves.Count < 1) // if we are in stalemate
             {
                 return new ChessMove(new ChessLocation(0, 0), new ChessLocation(0, 0), ChessFlag.Stalemate);
             }
-
             foreach (ChessMove move in moves)
             {
-                EvaluateBoard(move, board, myColor);
-//                GetMoveValue(move, board);
+                if (oldHeuristic)
+                {
+                    GetMoveValue(move, board);
+                }
+                else { 
+                    EvaluateBoard(move, board, myColor);
+                }
             }
-
             foreach (ChessMove move in moves)
             {
                 ChessBoard tBoard = board.Clone();
                 tBoard.MakeMove(move);
-                move.ValueOfMove -= (GetStrategicMove(tBoard, OtherColor(myColor)).ValueOfMove);
+                move.ValueOfMove -= (GetStrategicMove(tBoard, OtherColor(myColor), oldHeuristic).ValueOfMove);
             }
+            List<ChessMove> bestMoves;
 
-            List<ChessMove> bestMoves = getBestMoves(moves);
+            if (oldHeuristic)
+            {
+                bestMoves = GetLowestMoves(moves);
+            }
+            else
+            {
+                bestMoves = GetHighestMoves(moves);
+            }
 
             Log("There are " + moves.Count + " possible moves, with " + bestMoves.Count + " moves that seem decent.");
 
@@ -213,7 +238,7 @@ namespace ChessPawnsAI
             return bestMoves[randInt];
         }
 
-        public List<ChessMove> getBestMoves(List<ChessMove> allMoves)
+        public List<ChessMove> GetHighestMoves(List<ChessMove> allMoves)
         {
             List<ChessMove> bestMoves = new List<ChessMove>();
             allMoves.Sort();
@@ -239,28 +264,33 @@ namespace ChessPawnsAI
                     continue;
                 }
             }
-            // This is the lowest-value-is-best code:
-            //// Iterate through moveValues and add the move with the lowest value, 
-            //// clearing the list and re-making it if you find something lower.
-            //int lowestValue = 10000;
-            //int numMoves = 1;
-            //for (int i = 0; i < allMoves.Count; ++i)
-            //{
-            //    if (allMoves[i].ValueOfMove < lowestValue)
-            //    {
-            //        numMoves = 1;
-            //        bestMoves.Add(allMoves[i]);
-            //        lowestValue = allMoves[i].ValueOfMove;
-            //    }
-            //    else if (allMoves[i].ValueOfMove == lowestValue)
-            //    {
-            //        bestMoves.Add(allMoves[i]);
-            //        ++numMoves;
-            //    }
-            //}
-            //bestMoves.Reverse();
-            //return bestMoves.GetRange(0, numMoves);
             return bestMoves;
+        }
+
+        public List<ChessMove> GetLowestMoves(List<ChessMove> allMoves)
+        {
+            // This is the lowest-value-is-best code:
+            // Iterate through moveValues and add the move with the lowest value, 
+            // clearing the list and re-making it if you find something lower.
+            List<ChessMove> bestMoves = new List<ChessMove>();
+            int lowestValue = 10000;
+            int numMoves = 1;
+            for (int i = 0; i < allMoves.Count; ++i)
+            {
+                if (allMoves[i].ValueOfMove < lowestValue)
+                {
+                    numMoves = 1;
+                    bestMoves.Add(allMoves[i]);
+                    lowestValue = allMoves[i].ValueOfMove;
+                }
+                else if (allMoves[i].ValueOfMove == lowestValue)
+                {
+                    bestMoves.Add(allMoves[i]);
+                    ++numMoves;
+                }
+            }
+            bestMoves.Reverse();
+            return bestMoves.GetRange(0, numMoves);
         }
 
         /// <summary>
