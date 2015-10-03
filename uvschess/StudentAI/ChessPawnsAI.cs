@@ -41,7 +41,7 @@ namespace ChessPawnsAI
         // Like GetMoveValue, EvaluateBoard sets the ValueOfMove property of the ChessMove object
         // But it does so by evaluating the whole board.
         // A higher (more positive) integer means a better move.
-        public void EvaluateBoard(ChessMove move, ChessBoard b, ChessColor color)
+        public int EvaluateBoard(ChessMove move, ChessBoard b, ChessColor color)
         {
             ChessBoard board = b.Clone();
             board.MakeMove(move);
@@ -123,41 +123,47 @@ namespace ChessPawnsAI
                 val += check;
             if (move.Flag == ChessFlag.Checkmate)
                 val += checkMate;
-            move.ValueOfMove = val;
+            return val;
         }
 
-        public void GetMoveValue(ChessMove move, ChessBoard board)
+        public void GetMoveValue(ChessMove move, ChessBoard board, ChessColor color, bool oldHeuristic)
         {
-            // Taking a piece? Value lowers according to what piece you're taking (Queen is more important than a Pawn)
-            int baseMoveValue = 1000;
-            int capturePawn = 20;
-            int captureKnight = 50;
-            int captureBishop = 100;
-            int captureRook = 110;
-            int captureQueen = 350;
-            int check = 0;
-            int checkMate = baseMoveValue;
+            if (oldHeuristic)
+            {
+                // Taking a piece? Value lowers according to what piece you're taking (Queen is more important than a Pawn)
+                int baseMoveValue = 1000;
+                int capturePawn = 20;
+                int captureKnight = 50;
+                int captureBishop = 100;
+                int captureRook = 110;
+                int captureQueen = 350;
+                int check = 0;
+                int checkMate = baseMoveValue;
 
-            ChessLocation destination = move.To;
-            ChessPiece whatsThere = board[destination];
+                ChessLocation destination = move.To;
+                ChessPiece whatsThere = board[destination];
 
-            move.ValueOfMove = baseMoveValue;
+                move.ValueOfMove = baseMoveValue;
 
-            if (move.Flag == ChessFlag.Check)
-                move.ValueOfMove -= check;
-            if (move.Flag == ChessFlag.Checkmate)
-                move.ValueOfMove -= checkMate;
-            if (whatsThere == ChessPiece.WhitePawn || whatsThere == ChessPiece.BlackPawn)
-                move.ValueOfMove -= capturePawn;
-            else if (whatsThere == ChessPiece.WhiteKnight || whatsThere == ChessPiece.BlackKnight)
-                move.ValueOfMove -= captureKnight;
-            else if (whatsThere == ChessPiece.WhiteBishop || whatsThere == ChessPiece.BlackBishop)
-                move.ValueOfMove -= captureBishop;
-            else if (whatsThere == ChessPiece.WhiteRook || whatsThere == ChessPiece.BlackRook)
-                move.ValueOfMove -= captureRook;
-            else if (whatsThere == ChessPiece.WhiteQueen || whatsThere == ChessPiece.BlackQueen)
-                move.ValueOfMove -= captureQueen;
-
+                if (move.Flag == ChessFlag.Check)
+                    move.ValueOfMove -= check;
+                if (move.Flag == ChessFlag.Checkmate)
+                    move.ValueOfMove -= checkMate;
+                if (whatsThere == ChessPiece.WhitePawn || whatsThere == ChessPiece.BlackPawn)
+                    move.ValueOfMove -= capturePawn;
+                else if (whatsThere == ChessPiece.WhiteKnight || whatsThere == ChessPiece.BlackKnight)
+                    move.ValueOfMove -= captureKnight;
+                else if (whatsThere == ChessPiece.WhiteBishop || whatsThere == ChessPiece.BlackBishop)
+                    move.ValueOfMove -= captureBishop;
+                else if (whatsThere == ChessPiece.WhiteRook || whatsThere == ChessPiece.BlackRook)
+                    move.ValueOfMove -= captureRook;
+                else if (whatsThere == ChessPiece.WhiteQueen || whatsThere == ChessPiece.BlackQueen)
+                    move.ValueOfMove -= captureQueen;
+            }
+            else
+            {
+                move.ValueOfMove = EvaluateBoard(move, board, color);
+            }
         }
 
 
@@ -171,14 +177,8 @@ namespace ChessPawnsAI
             
             foreach (ChessMove move in moves)
             {
-                if (oldHeuristic)
-                {
-                    GetMoveValue(move, board);
-                }
-                else
-                {
-                    EvaluateBoard(move, board, myColor);
-                }
+                GetMoveValue(move, board, myColor, oldHeuristic);
+
             }
             List<ChessMove> bestMoves;
             if (oldHeuristic)
@@ -206,13 +206,7 @@ namespace ChessPawnsAI
             }
             foreach (ChessMove move in moves)
             {
-                if (oldHeuristic)
-                {
-                    GetMoveValue(move, board);
-                }
-                else { 
-                    EvaluateBoard(move, board, myColor);
-                }
+                GetMoveValue(move, board, myColor, oldHeuristic);
             }
             foreach (ChessMove move in moves)
             {
