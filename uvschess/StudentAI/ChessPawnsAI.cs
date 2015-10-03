@@ -44,6 +44,7 @@ namespace ChessPawnsAI
         {
             ChessBoard board = b.Clone();
             board.MakeMove(move);
+//            ChessColor other = OtherColor(color);
             int val = 0;
             // Values based on https://en.wikipedia.org/wiki/Chess_piece_relative_value#Hans_Berliner.27s_system
             int pawn = 100;
@@ -52,7 +53,6 @@ namespace ChessPawnsAI
             int rook = 510;
             int queen = 880;
             int king = 10000;
-
             int check = 1000;
             int checkMate = 9000;
             for (int x = 0; x < 8; x++)
@@ -125,39 +125,39 @@ namespace ChessPawnsAI
             move.ValueOfMove = val;
         }
 
-        public void GetMoveValue(ChessMove move, ChessBoard board)
-        {
-            // Taking a piece? Value lowers according to what piece you're taking (Queen is more important than a Pawn)
-            int baseMoveValue = 1000;
-            int capturePawn = 20;
-            int captureKnight = 50;
-            int captureBishop = 100;
-            int captureRook = 110;
-            int captureQueen = 350;
-            int check = 0;
-            int checkMate = baseMoveValue;
+        //public void GetMoveValue(ChessMove move, ChessBoard board)
+        //{
+        //    // Taking a piece? Value lowers according to what piece you're taking (Queen is more important than a Pawn)
+        //    int baseMoveValue = 1000;
+        //    int capturePawn = 20;
+        //    int captureKnight = 50;
+        //    int captureBishop = 100;
+        //    int captureRook = 110;
+        //    int captureQueen = 350;
+        //    int check = 0;
+        //    int checkMate = baseMoveValue;
 
-            ChessLocation destination = move.To;
-            ChessPiece whatsThere = board[destination];
+        //    ChessLocation destination = move.To;
+        //    ChessPiece whatsThere = board[destination];
 
-            move.ValueOfMove = baseMoveValue;
+        //    move.ValueOfMove = baseMoveValue;
 
-            if (move.Flag == ChessFlag.Check)
-                move.ValueOfMove -= check;
-            if (move.Flag == ChessFlag.Checkmate)
-                move.ValueOfMove -= checkMate;
-            if (whatsThere == ChessPiece.WhitePawn || whatsThere == ChessPiece.BlackPawn)
-                move.ValueOfMove -= capturePawn;
-            else if (whatsThere == ChessPiece.WhiteKnight || whatsThere == ChessPiece.BlackKnight)
-                move.ValueOfMove -= captureKnight;
-            else if (whatsThere == ChessPiece.WhiteBishop || whatsThere == ChessPiece.BlackBishop)
-                move.ValueOfMove -= captureBishop;
-            else if (whatsThere == ChessPiece.WhiteRook || whatsThere == ChessPiece.BlackRook)
-                move.ValueOfMove -= captureRook;
-            else if (whatsThere == ChessPiece.WhiteQueen || whatsThere == ChessPiece.BlackQueen)
-                move.ValueOfMove -= captureQueen;
+        //    if (move.Flag == ChessFlag.Check)
+        //        move.ValueOfMove -= check;
+        //    if (move.Flag == ChessFlag.Checkmate)
+        //        move.ValueOfMove -= checkMate;
+        //    if (whatsThere == ChessPiece.WhitePawn || whatsThere == ChessPiece.BlackPawn)
+        //        move.ValueOfMove -= capturePawn;
+        //    else if (whatsThere == ChessPiece.WhiteKnight || whatsThere == ChessPiece.BlackKnight)
+        //        move.ValueOfMove -= captureKnight;
+        //    else if (whatsThere == ChessPiece.WhiteBishop || whatsThere == ChessPiece.BlackBishop)
+        //        move.ValueOfMove -= captureBishop;
+        //    else if (whatsThere == ChessPiece.WhiteRook || whatsThere == ChessPiece.BlackRook)
+        //        move.ValueOfMove -= captureRook;
+        //    else if (whatsThere == ChessPiece.WhiteQueen || whatsThere == ChessPiece.BlackQueen)
+        //        move.ValueOfMove -= captureQueen;
 
-        }
+        //}
         
 
         public ChessMove GetStrategicMove(ChessBoard board, ChessColor myColor)
@@ -312,7 +312,6 @@ namespace ChessPawnsAI
                 {
                     case ChessPiece.WhitePawn:
                         {
-
                             moves.AddRange(GetWhitePawnMoves(board, location));
                             break;
                         }
@@ -343,7 +342,6 @@ namespace ChessPawnsAI
                         }
                 }
             }
-
             else //my color is Black
             {
                 switch (myPiece)
@@ -392,11 +390,8 @@ namespace ChessPawnsAI
                 if (!IsCheck(board, moves[i], king, myColor))
                 {
                     myMoves.Add(moves[i]);
-                }
-                
+                }                
             }
-
-            
             // Flag any moves that put our opponent in check
             foreach (ChessMove move in myMoves)
             {
@@ -405,8 +400,7 @@ namespace ChessPawnsAI
                     move.Flag = ChessFlag.Check;
                 }
             }
-
-            // Flag any moves that put our opponent in checkmate
+            // Flag any moves that checkmate our opponent
             GetCheckMate(myMoves, board, myColor);
 
             return myMoves;
