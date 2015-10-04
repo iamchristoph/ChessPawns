@@ -34,7 +34,7 @@ namespace ChessPawnsAI
             //return new ChessMove(new ChessLocation(0, 0), new ChessLocation(0, 0), ChessFlag.);
             //move = GetStrategicMove(board, myColor);
             bool oldHeuristic = false;
-            // move = GetLookAheadMove(board, myColor, oldHeuristic);
+            // move = GetLookAheadMove(board, myColor, oldHeuristic, 0);
             move = GetAlphaBetaMove(board, myColor, oldHeuristic);
             return move;
         }
@@ -48,7 +48,7 @@ namespace ChessPawnsAI
             }
             foreach (ChessMove move in moves)
             {
-                move.ValueOfMove = AlphaBeta(move, board, myColor, 2, int.MinValue, int.MaxValue, true);
+                move.ValueOfMove = AlphaBeta(move, board, myColor, 2, int.MaxValue, int.MinValue, true);
             }
             
             List<ChessMove> bestMoves;
@@ -74,7 +74,7 @@ namespace ChessPawnsAI
         public int AlphaBeta(ChessMove move, ChessBoard b, ChessColor color, int depth, int alpha, int beta, bool maximizingPlayer)
         {
 #if DEBUG
-            Log("Depth = " + depth + ", alpha = " + alpha + ", beta = "+ beta);
+            //Log("Depth = " + depth + ", alpha = " + alpha + ", beta = "+ beta);
 #endif
             int bestVal = 0;
             // if depth is 0 or node is a terminal node
@@ -84,29 +84,30 @@ namespace ChessPawnsAI
             }
             ChessBoard board = b.Clone();
             board.MakeMove(move);
+            color = OtherColor(color);
             List<ChessMove> children = GetAllMoves(board, color);
             if (maximizingPlayer)
             {
-                Log("Getting max alpha = " + alpha);
-                bestVal = int.MinValue;
+            //    Log("Getting max alpha = " + alpha);
+                bestVal = int.MaxValue;
                 foreach(ChessMove child in children)
                 {
-                    bestVal = Math.Max(bestVal, AlphaBeta(child, board, color, depth - 1, alpha, beta, false));
-                    alpha = Math.Max(alpha, bestVal);
-                    if (beta <= alpha)
+                    bestVal = Math.Min(bestVal, AlphaBeta(child, board, color, depth - 1, alpha, beta, false));
+                    alpha = Math.Min(alpha, bestVal);
+                    if (beta >= alpha)
                         break;
                 }
                 return bestVal;
             }
             else
             {
-                Log("Getting min beta = " + beta);
-                bestVal = int.MaxValue;
+            //    Log("Getting min beta = " + beta);
+                bestVal = int.MinValue;
                 foreach (ChessMove child in children)
                 {
-                    bestVal = Math.Min(bestVal, AlphaBeta(child, board, color, depth - 1, alpha, beta, true));
-                    beta = Math.Min(beta, bestVal);
-                    if (beta <= alpha)
+                    bestVal = Math.Max(bestVal, AlphaBeta(child, board, color, depth - 1, alpha, beta, true));
+                    beta = Math.Max(beta, bestVal);
+                    if (beta >= alpha)
                         break;
                 }
                 return bestVal;
@@ -133,7 +134,7 @@ namespace ChessPawnsAI
             int rook = 510;
             int queen = 880;
             int king = 10000;
-            int check = 1000;
+            int check = 100;
             int checkMate = 9000;
             for (int x = 0; x < 8; x++)
             {
@@ -276,7 +277,7 @@ namespace ChessPawnsAI
             return bestMoves[randInt];
         }
 
-        public ChessMove GetLookAheadMove(ChessBoard board, ChessColor myColor, bool oldHeuristic)
+        public ChessMove GetLookAheadMove(ChessBoard board, ChessColor myColor, bool oldHeuristic, int depth)
         {
             List<ChessMove> moves = GetAllMoves(board, myColor);
             if (moves.Count < 1) // if we are in stalemate
@@ -287,11 +288,23 @@ namespace ChessPawnsAI
             {
                 GetMoveValue(move, board, myColor, oldHeuristic);
             }
-            foreach (ChessMove move in moves)
+            if (depth > 0)
             {
-                ChessBoard tBoard = board.Clone();
-                tBoard.MakeMove(move);
-                move.ValueOfMove -= (GetStrategicMove(tBoard, OtherColor(myColor), oldHeuristic).ValueOfMove);
+                foreach (ChessMove move in moves)
+                {
+                    ChessBoard tBoard = board.Clone();
+                    tBoard.MakeMove(move);
+                    move.ValueOfMove -= (GetLookAheadMove(tBoard, OtherColor(myColor), oldHeuristic, --depth).ValueOfMove);
+                }
+            }
+            else
+            {
+                foreach (ChessMove move in moves)
+                {
+                    ChessBoard tBoard = board.Clone();
+                    tBoard.MakeMove(move);
+                    move.ValueOfMove -= (GetStrategicMove(tBoard, OtherColor(myColor), oldHeuristic).ValueOfMove);
+                }
             }
             List<ChessMove> bestMoves;
 
