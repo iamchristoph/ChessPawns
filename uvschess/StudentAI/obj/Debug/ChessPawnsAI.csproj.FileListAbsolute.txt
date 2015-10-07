@@ -18,3 +18,8 @@ C:\Users\Travis\Documents\Programming\School\CS 4470 - AI\Chess\ChessPawns\uvsch
 C:\Users\Travis\Documents\Programming\School\CS 4470 - AI\Chess\ChessPawns\uvschess\StudentAI\obj\Debug\ChessPawnsAI.csprojResolveAssemblyReference.cache
 C:\Users\Travis\Documents\Programming\School\CS 4470 - AI\Chess\ChessPawns\uvschess\StudentAI\obj\Debug\StudentAI.dll
 C:\Users\Travis\Documents\Programming\School\CS 4470 - AI\Chess\ChessPawns\uvschess\StudentAI\obj\Debug\StudentAI.pdb
+C:\Users\testicon\Source\Repos\ChessPawns\uvschess\Framework\bin\Debug\StudentAI.dll
+C:\Users\testicon\Source\Repos\ChessPawns\uvschess\Framework\bin\Debug\StudentAI.pdb
+C:\Users\testicon\Source\Repos\ChessPawns\uvschess\StudentAI\obj\Debug\ChessPawnsAI.csprojResolveAssemblyReference.cache
+C:\Users\testicon\Source\Repos\ChessPawns\uvschess\StudentAI\obj\Debug\StudentAI.dll
+C:\Users\testicon\Source\Repos\ChessPawns\uvschess\StudentAI\obj\Debug\StudentAI.pdb

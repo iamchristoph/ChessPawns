@@ -20,8 +20,6 @@ namespace ChessPawnsAI
             get { return "ChessPawnsAI"; }
 #endif
         }
-
-        public System.Diagnostics.Stopwatch stopwatch = new System.Diagnostics.Stopwatch();
         /// <summary>
         /// Evaluates the chess board and decided which move to make. This is the main method of the AI.
         /// The framework will call this method when it's your turn.
@@ -32,35 +30,46 @@ namespace ChessPawnsAI
         public ChessMove GetNextMove(ChessBoard board, ChessColor myColor)
         {
             ChessMove move = null;
-            stopwatch.Reset();
-            stopwatch.Start();
             // = GetRndMove(board, myColor);
             //return new ChessMove(new ChessLocation(0, 0), new ChessLocation(0, 0), ChessFlag.);
             //move = GetStrategicMove(board, myColor);
             bool oldHeuristic = false;
             // move = GetLookAheadMove(board, myColor, oldHeuristic, 0);
             move = GetAlphaBetaMove(board, myColor, oldHeuristic);
-            stopwatch.Stop();            
+
             return move;
         }
 
-        public ChessMove GetAlphaBetaMove(ChessBoard board, ChessColor myColor, bool oldHeuristic) 
+        public ChessMove GetAlphaBetaMove(ChessBoard board, ChessColor myColor, bool oldHeuristic)
         {
             List<ChessMove> moves = GetAllMoves(board, myColor);
             if (moves.Count < 1) // if we are in stalemate
             {
                 return new ChessMove(new ChessLocation(0, 0), new ChessLocation(0, 0), ChessFlag.Stalemate);
             }
-                        
+
+            //im an idiot. 
+            long start = DateTime.Now.Ticks;
+            int count = 0;
+            int depthToSearch = 3; 
             foreach (ChessMove move in moves)
-            {                
-                //move.ValueOfMove = AlphaBetaTimed(move, board, myColor, 3, DateTime.Now.Ticks, int.MaxValue, int.MinValue, true);
-                move.ValueOfMove = AlphaBeta(move, board, myColor, 2, int.MaxValue, int.MinValue, true);
+            {
+                move.ValueOfMove = AlphaBeta(move, board, myColor, depthToSearch, int.MaxValue, int.MinValue, true);
+                count++;
+                if ((DateTime.Now.Ticks - start) / TimeSpan.TicksPerMillisecond > 4000)
+                {                    
+                    depthToSearch = 2;                    
+                }
+                if ((DateTime.Now.Ticks - start) / TimeSpan.TicksPerMillisecond > 5000)
+                {
+                    depthToSearch = 1;
+                }
+                //move.ValueOfMove = AlphaBeta(move, board, myColor, 2, int.MaxValue, int.MinValue, true);
                 //Log(stopwatch.ElapsedMilliseconds.ToString());
             }
-            
+
             List<ChessMove> bestMoves = GetHighestMoves(moves);
-            
+
             Log("There are " + moves.Count + " possible moves, with " + bestMoves.Count + " moves that seem decent.");
 
             Random random = new Random();
@@ -80,62 +89,7 @@ namespace ChessPawnsAI
             // if depth is 0 or node is a terminal node
             //stopwatch will check to see how much time has passed since the get move process was started.  
             if ((depth == 0) || (move.Flag == ChessFlag.Checkmate))
-            {                
-                return EvaluateBoard(move, b, color);
-            }
-            ChessBoard board = b.Clone();
-            board.MakeMove(move);
-            color = OtherColor(color);
-            List<ChessMove> children = GetAllMoves(board, color);
-            if (maximizingPlayer)
             {
-            //    Log("Getting max alpha = " + alpha);
-                bestVal = int.MaxValue;
-                foreach(ChessMove child in children)
-                {
-                    bestVal = Math.Min(bestVal, AlphaBeta(child, board, color, depth - 1, alpha, beta, false));
-                    alpha = Math.Min(alpha, bestVal);
-                    if (beta >= alpha)
-                        break;
-                }
-                return alpha;
-            }
-            else
-            {
-            //    Log("Getting min beta = " + beta);
-                bestVal = int.MinValue;
-                foreach (ChessMove child in children)
-                {
-                    bestVal = Math.Max(bestVal, AlphaBeta(child, board, color, depth - 1, alpha, beta, true));
-                    beta = Math.Max(beta, bestVal);
-                    if (beta >= alpha)
-                        break;
-                }
-                return beta;
-            }
-        }
-
-        
-        
-        
-        
-        // Minimax with fail-soft alpha-beta pruning time limited rather than depth
-        // Based on AlphaBeta and a good deal of reading on MSDN/
-        // since we dont want to infinitely recurse down just a single branch of the initial tree, we want to probably limit the depth to 3 maybe 4 if were feeling brave. 
-        public int AlphaBetaTimed(ChessMove move, ChessBoard b, ChessColor color, int depth, long startTime, int alpha, int beta, bool maximizingPlayer)
-        {
-#if DEBUG
-            //Log("Depth = " + depth + ", alpha = " + alpha + ", beta = "+ beta);
-#endif
-            Log((DateTime.Now.Ticks - startTime).ToString());
-            //Log(stopwatch.ElapsedTicks.ToString());
-            int bestVal = 0;
-            // if depth is 0 or node is a terminal node
-            //stopwatch will check to see how much time has passed since the get move process was started.  
-            //if time is up, or were in checkmate or  we hit our depth. 
-            if ((DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond) > 3500 || depth == 0 || move.Flag == ChessFlag.Checkmate)
-            {
-                Log((DateTime.Now.Ticks / TimeSpan.TicksPerMillisecond).ToString());
                 return EvaluateBoard(move, b, color);
             }
             ChessBoard board = b.Clone();
@@ -148,12 +102,12 @@ namespace ChessPawnsAI
                 bestVal = int.MaxValue;
                 foreach (ChessMove child in children)
                 {
-                    bestVal = Math.Min(bestVal, AlphaBetaTimed(child, board, color, depth -1, startTime, alpha, beta, false));
+                    bestVal = Math.Min(bestVal, AlphaBeta(child, board, color, depth - 1, alpha, beta, false));
                     alpha = Math.Min(alpha, bestVal);
                     if (beta >= alpha)
                         break;
                 }
-                return bestVal;
+                return alpha;
             }
             else
             {
@@ -161,12 +115,71 @@ namespace ChessPawnsAI
                 bestVal = int.MinValue;
                 foreach (ChessMove child in children)
                 {
-                    bestVal = Math.Max(bestVal, AlphaBetaTimed(child, board, color, depth-1, startTime, alpha, beta, true));
+                    bestVal = Math.Max(bestVal, AlphaBeta(child, board, color, depth - 1, alpha, beta, true));
                     beta = Math.Max(beta, bestVal);
-                    if (beta >= alpha) 
+                    if (beta >= alpha)
                         break;
                 }
-                return bestVal;
+                return beta;
+            }
+        }
+
+        // Minimax with fail-soft alpha-beta pruning time limited rather than depth
+        // Based on AlphaBeta and a good deal of reading on MSDN/
+        // since we dont want to infinitely recurse down just a single branch of the initial tree, we want to probably limit the depth to 3 maybe 4 if were feeling brave. 
+        public int AlphaBetaTimed(ChessMove move, ChessBoard b, ChessColor color, int depth, long startTime, int alpha, int beta, bool maximizingPlayer)
+        {
+
+            int bestVal = 0;
+            // if depth is 0 or node is a terminal node 
+            if ((depth == 0) || (move.Flag == ChessFlag.Checkmate))
+            {
+                return EvaluateBoard(move, b, color);
+            }
+            ChessBoard board = b.Clone();
+            board.MakeMove(move);
+            color = OtherColor(color);
+            List<ChessMove> children = GetAllMoves(board, color);
+            if (maximizingPlayer)
+            {
+                //    Log("Getting max alpha = " + alpha);
+                bestVal = int.MaxValue;
+                foreach (ChessMove child in children)
+                {
+                    //if time limit hit
+                    //no time left to calculate, just return 0
+                    //if ((DateTime.Now.Ticks - startTime) / TimeSpan.TicksPerMillisecond > TIME_LIMIT)
+                    //{
+                    //    //alpha = 0;
+                    //    break;
+                    //}
+
+                    bestVal = Math.Min(bestVal, AlphaBetaTimed(child, board, color, depth - 1, startTime, alpha, beta, false));
+                    alpha = Math.Min(alpha, bestVal);
+                    if (beta >= alpha)
+                        break;
+
+                }
+                return alpha;
+            }
+            else
+            {
+                //    Log("Getting min beta = " + beta);
+                bestVal = int.MinValue;
+                foreach (ChessMove child in children)
+                {
+                    //no time left to calculate, just return 0
+                    //if ((DateTime.Now.Ticks - startTime) / TimeSpan.TicksPerMillisecond > TIME_LIMIT)
+                    //{
+                    //    //beta = 0; 
+                    //    break;
+                    //}
+                    bestVal = Math.Max(bestVal, AlphaBetaTimed(child, board, color, depth - 1, startTime, alpha, beta, true));
+                    beta = Math.Max(beta, bestVal);
+                    if (beta >= alpha)
+                        break;
+                }
+                return beta;
             }
         }
 
@@ -310,7 +323,7 @@ namespace ChessPawnsAI
             {
                 return new ChessMove(new ChessLocation(0, 0), new ChessLocation(0, 0), ChessFlag.Stalemate);
             }
-            
+
             foreach (ChessMove move in moves)
             {
                 GetMoveValue(move, board, myColor, oldHeuristic);
