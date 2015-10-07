@@ -629,8 +629,7 @@ namespace ChessPawnsAI
                         moves.Add(new ChessMove(location, new ChessLocation(x, y - 2)));
                 }
             }
-            // get forward move if available
-            if (y - 1 >= 0)
+            else if (y - 1 >= 0)
             {
                 if (board[x, y - 1] == ChessPiece.Empty)
                 {
@@ -666,8 +665,7 @@ namespace ChessPawnsAI
                         moves.Add(new ChessMove(location, new ChessLocation(x, y + 2)));
                 }
             }
-            // get forward move if available
-            if (y + 1 < 8)
+            else if (y + 1 < 8)
             {
                 if (board[x, y + 1] == ChessPiece.Empty)
                 {
