@@ -15,7 +15,7 @@ namespace ChessPawnsAI
         public string Name
         {
 #if DEBUG
-            get { return "ChessPawnsAI (MiniMax Evaluate Board)"; }
+            get { return "ChessPawnsAI"; }
 #else
             get { return "ChessPawnsAI"; }
 #endif
@@ -51,7 +51,7 @@ namespace ChessPawnsAI
             //im an idiot. 
             long start = DateTime.Now.Ticks;
             int count = 0;
-            int depthToSearch = 3; 
+            int depthToSearch = 2; 
             foreach (ChessMove move in moves)
             {
                 move.ValueOfMove = AlphaBeta(move, board, myColor, depthToSearch, int.MaxValue, int.MinValue, true);
@@ -632,6 +632,15 @@ namespace ChessPawnsAI
                     if (board[x, y - 2] == ChessPiece.Empty)
                         moves.Add(new ChessMove(location, new ChessLocation(x, y - 2)));
                 }
+                //is there a piece to either of your diagonals?
+                if (x - 1 >= 0 && board[x - 1, y - 1] < ChessPiece.Empty)
+                {
+                    moves.Add(new ChessMove(location, new ChessLocation(x - 1, y - 1)));
+                }
+                if (x + 1 < 8 && board[x + 1, y - 1] < ChessPiece.Empty)
+                {
+                    moves.Add(new ChessMove(location, new ChessLocation(x + 1, y - 1)));
+                }
             }
             else if (y - 1 >= 0)
             {
@@ -667,6 +676,15 @@ namespace ChessPawnsAI
                     moves.Add(new ChessMove(location, new ChessLocation(x, y + 1)));
                     if (board[x, y + 2] == ChessPiece.Empty)
                         moves.Add(new ChessMove(location, new ChessLocation(x, y + 2)));
+                }
+                //is there a piece to either of your diagonals?
+                if (x - 1 >= 0 && board[x - 1, y + 1] > ChessPiece.Empty)
+                {
+                    moves.Add(new ChessMove(location, new ChessLocation(x - 1, y + 1)));
+                }
+                if (x + 1 < 8 && board[x + 1, y + 1] > ChessPiece.Empty)
+                {
+                    moves.Add(new ChessMove(location, new ChessLocation(x + 1, y + 1)));
                 }
             }
             else if (y + 1 < 8)

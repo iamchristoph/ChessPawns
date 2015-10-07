@@ -91,7 +91,7 @@ namespace UvsChess.Framework
 
             // NO LOGGING ALLOWED between here
             _startTime = DateTime.Now;
-            _endTime = _startTime.AddMilliseconds(maxTimeToLetThreadRun+ 200000);
+            _endTime = _startTime.AddMilliseconds(maxTimeToLetThreadRun);
             _aiThread.Start();
             // AND HERE because it would count against the AI's time.
 
