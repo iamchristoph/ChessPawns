@@ -24,3 +24,4 @@ C:\Users\Sara.Rands_base\Source\Repos\ChessPawns\uvschess\Framework\obj\Release\
 C:\Users\Sara.Rands_base\Source\Repos\ChessPawns\uvschess\Framework\obj\Release\Framework.2010.csproj.GenerateResource.Cache
 C:\Users\Sara.Rands_base\Source\Repos\ChessPawns\uvschess\Framework\obj\Release\UvsChess.exe
 C:\Users\Sara.Rands_base\Source\Repos\ChessPawns\uvschess\Framework\obj\Release\UvsChess.pdb
+C:\Users\Travis\Documents\Programming\School\CS 4470 - AI\Chess\ChessPawns\uvschess\Framework\bin\Debug\UvsChess.exe

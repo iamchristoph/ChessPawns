@@ -455,23 +455,22 @@ namespace ChessPawnsAI
         /// <param name="board"></param>
         /// <param name="myColor"></param>
         /// <returns>list of possible Moves</returns>
-        public List<ChessMove> GetAllMoves(ChessBoard board, ChessColor myColor)
+        public List<ChessMove> GetAllMoves(ChessBoard board, ChessColor myColor, int remaining = 3)
         {
             List<ChessMove> moves = new List<ChessMove>(); // a list to hold our moves
             for (int i = 0; i < 8; i++ )
             {
                 for (int j = 0; j < 8; j++)
                 {
-                    moves.AddRange(GetMove(board, new ChessLocation(i, j), myColor)); // for each location add the valid moves
+                    moves.AddRange(GetMove(board, new ChessLocation(i, j), myColor, remaining)); // for each location add the valid moves
                 }
             }
-
 
             return moves;
         }
 
 
-        public List<ChessMove> GetMove(ChessBoard board, ChessLocation location, ChessColor myColor)
+        public List<ChessMove> GetMove(ChessBoard board, ChessLocation location, ChessColor myColor, int remaining = 3)
         {
             ChessPiece myPiece = board[location];
             //init a new location so we can have somethign to write to. 
@@ -564,17 +563,23 @@ namespace ChessPawnsAI
                     myMoves.Add(moves[i]);
                 }                
             }
+            List<ChessMove> checkMoves = new List<ChessMove>();
             // Flag any moves that put our opponent in check
             foreach (ChessMove move in myMoves)
             {
                 if (IsCheck(board, move, otherKing, OtherColor(myColor)))
                 {
                     move.Flag = ChessFlag.Check;
+                    checkMoves.Add(move);
                 }
             }
             // Flag any moves that checkmate our opponent
-            GetCheckMate(myMoves, board, myColor);
-
+            //GetCheckMate(myMoves, board, myColor);
+            
+            if (checkMoves.Count > 0)
+            {
+                GetCheckMate(checkMoves, board, myColor, remaining -1);
+            }
             return myMoves;
         }
 
@@ -991,16 +996,19 @@ namespace ChessPawnsAI
             return piece > ChessPiece.Empty ? ChessColor.White : ChessColor.Black;
         }
 
-        public void GetCheckMate(List<ChessMove> moves, ChessBoard board, ChessColor myColor)
+        public void GetCheckMate(List<ChessMove> moves, ChessBoard board, ChessColor myColor, int remaining = 3)
         {
-
+            if(remaining == 1 )
+            {
+                return; // we're too deep, it doesn't matter
+            }
             foreach (ChessMove move in moves)
             {
                 if (move.Flag == ChessFlag.Check)
                 {
                     ChessBoard testBoard = board.Clone();
                     testBoard.MakeMove(move);
-                    List<ChessMove> checkMoves = GetAllMoves(testBoard, OtherColor(myColor));
+                    List<ChessMove> checkMoves = GetAllMoves(testBoard, OtherColor(myColor), remaining);
                     if (checkMoves.Count < 1)
                     {
                         move.Flag = ChessFlag.Checkmate;
@@ -1089,7 +1097,7 @@ namespace ChessPawnsAI
                 if (IsValid(loc)) // Bounds checking
                 {
                     // Is there a knight there?
-                    if (board[loc] == knight)
+                    if (board[loc] == knight) // this is slow, takes 3.7% of time
                     {
                         return true;
                     }
@@ -1149,7 +1157,7 @@ namespace ChessPawnsAI
             {
                 if (IsValid(loc))
                 {
-                    if (board[loc] == kingPiece)
+                    if (board[loc] == kingPiece) // this is slow, takes 4.5% of time
                     {
                         return true;
                     }
@@ -1370,8 +1378,9 @@ namespace ChessPawnsAI
             {
                 for (int j = 0; j < 8; j++)
                 {
-                    ChessPiece current = board[i, j];
-                    if (current == king)
+                    //ChessPiece current = board[i, j];
+                    //if (current == king)
+                    if(king == board[i,j])
                     {
                         return new ChessLocation(i, j);
                     }
