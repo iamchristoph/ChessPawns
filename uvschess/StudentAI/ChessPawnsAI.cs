@@ -468,7 +468,7 @@ namespace ChessPawnsAI
         /// <param name="board"></param>
         /// <param name="myColor"></param>
         /// <returns>list of possible Moves</returns>
-        public List<ChessMove> GetAllMoves(ChessBoard board, ChessColor myColor, int remaining = 3)
+        public List<ChessMove> GetAllMoves(ChessBoard board, ChessColor myColor, int remaining = 3, bool lookingForCheckmate = false)
         {
             List<ChessMove> moves = new List<ChessMove>(); // a list to hold our moves
             for (int i = 0; i < 8; i++ )
@@ -476,6 +476,10 @@ namespace ChessPawnsAI
                 for (int j = 0; j < 8; j++)
                 {
                     moves.AddRange(GetMove(board, new ChessLocation(i, j), myColor, remaining)); // for each location add the valid moves
+                    if(lookingForCheckmate && moves.Count > 0)
+                    {
+                        return moves;
+                    }
                 }
             }
 
@@ -1019,7 +1023,7 @@ namespace ChessPawnsAI
                 {
                     ChessBoard testBoard = board.Clone();
                     testBoard.MakeMove(move);
-                    List<ChessMove> checkMoves = GetAllMoves(testBoard, OtherColor(myColor), remaining);
+                    List<ChessMove> checkMoves = GetAllMoves(testBoard, OtherColor(myColor), remaining, true);
                     if (checkMoves.Count < 1)
                     {
                         move.Flag = ChessFlag.Checkmate;
