@@ -54,21 +54,13 @@ namespace ChessPawnsAI
                         
             foreach (ChessMove move in moves)
             {                
-                move.ValueOfMove = AlphaBetaTimed(move, board, myColor, 3, DateTime.Now.Ticks, int.MaxValue, int.MinValue, true);
-                Log(stopwatch.ElapsedMilliseconds.ToString());
+                //move.ValueOfMove = AlphaBetaTimed(move, board, myColor, 3, DateTime.Now.Ticks, int.MaxValue, int.MinValue, true);
+                move.ValueOfMove = AlphaBeta(move, board, myColor, 2, int.MaxValue, int.MinValue, true);
+                //Log(stopwatch.ElapsedMilliseconds.ToString());
             }
             
-            List<ChessMove> bestMoves;
-
-            if (oldHeuristic)
-            {
-                bestMoves = GetLowestMoves(moves);
-            }
-            else
-            {
-                bestMoves = GetHighestMoves(moves);
-            }
-
+            List<ChessMove> bestMoves = GetHighestMoves(moves);
+            
             Log("There are " + moves.Count + " possible moves, with " + bestMoves.Count + " moves that seem decent.");
 
             Random random = new Random();
@@ -106,7 +98,7 @@ namespace ChessPawnsAI
                     if (beta >= alpha)
                         break;
                 }
-                return bestVal;
+                return alpha;
             }
             else
             {
@@ -119,7 +111,7 @@ namespace ChessPawnsAI
                     if (beta >= alpha)
                         break;
                 }
-                return bestVal;
+                return beta;
             }
         }
 
