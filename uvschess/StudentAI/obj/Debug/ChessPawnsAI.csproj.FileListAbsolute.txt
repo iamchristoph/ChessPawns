@@ -13,3 +13,8 @@ C:\Users\Sara.Rands_base\Source\Repos\ChessPawns\uvschess\Framework\bin\Debug\St
 C:\Users\Sara.Rands_base\Source\Repos\ChessPawns\uvschess\StudentAI\obj\Debug\ChessPawnsAI.csprojResolveAssemblyReference.cache
 C:\Users\Sara.Rands_base\Source\Repos\ChessPawns\uvschess\StudentAI\obj\Debug\StudentAI.dll
 C:\Users\Sara.Rands_base\Source\Repos\ChessPawns\uvschess\StudentAI\obj\Debug\StudentAI.pdb
+C:\Users\Travis\Documents\Programming\School\CS 4470 - AI\Chess\ChessPawns\uvschess\Framework\bin\Debug\StudentAI.dll
+C:\Users\Travis\Documents\Programming\School\CS 4470 - AI\Chess\ChessPawns\uvschess\Framework\bin\Debug\StudentAI.pdb
+C:\Users\Travis\Documents\Programming\School\CS 4470 - AI\Chess\ChessPawns\uvschess\StudentAI\obj\Debug\ChessPawnsAI.csprojResolveAssemblyReference.cache
+C:\Users\Travis\Documents\Programming\School\CS 4470 - AI\Chess\ChessPawns\uvschess\StudentAI\obj\Debug\StudentAI.dll
+C:\Users\Travis\Documents\Programming\School\CS 4470 - AI\Chess\ChessPawns\uvschess\StudentAI\obj\Debug\StudentAI.pdb
