@@ -1169,7 +1169,7 @@ namespace ChessPawnsAI
         {
 
             int x = king.X, y = king.Y;
-            List<ChessLocation> locs = new List<ChessLocation>();
+            //List<ChessLocation> locs = new List<ChessLocation>();
             ChessPiece pawn, kingPiece;
             if (color == ChessColor.White)
             {
@@ -1184,44 +1184,56 @@ namespace ChessPawnsAI
             // Check for pawns:
             if (color == ChessColor.White)
             {
-                locs.Add(new ChessLocation(x + 1, y - 1));
-                locs.Add(new ChessLocation(x - 1, y - 1));
+                x += 1; y -= 1; // "northwest" of white king
+                if (IsPieceThere(x, y, board, pawn)) return true;
+                x += 2;// Slide 2 spaces to the right; "northeast" of king
+                if (IsPieceThere(x, y, board, pawn)) return true;
             }
             else // black
             {
-                locs.Add(new ChessLocation(x + 1, y + 1));
-                locs.Add(new ChessLocation(x - 1, y + 1));
+                x += 1; y += 1; // "southeast" of black king
+                if (IsPieceThere(x, y, board, pawn)) return true;
+                x -= 2; // "southwest"
+                if (IsPieceThere(x, y, board, pawn)) return true;
             }
-            foreach (ChessLocation loc in locs)
-            {
-                if (IsValid(loc))
-                {
-                    if (board[loc] == pawn)
-                    {
-                        return true;
-                    }
-                }
-            }
-            locs.Clear();
             // Check for kings all around the king
-            locs.Add(new ChessLocation(x - 1, y - 1));
-            locs.Add(new ChessLocation(x, y - 1));
-            locs.Add(new ChessLocation(x + 1, y - 1));
-            locs.Add(new ChessLocation(x + 1, y));
-            locs.Add(new ChessLocation(x + 1, y + 1));
-            locs.Add(new ChessLocation(x, y + 1));
-            locs.Add(new ChessLocation(x - 1, y + 1));
-            locs.Add(new ChessLocation(x - 1, y));
-            foreach (ChessLocation loc in locs)
-            {
-                if (IsValid(loc))
-                {
-                    if (board[loc] == kingPiece) // this is slow, takes 4.5% of time
-                    {
-                        return true;
-                    }
-                }
-            }
+            // Start at 12:00 and go around
+            x = king.X; y = king.Y;
+            y -= 1; // N
+            if (IsPieceThere(x, y, board, kingPiece)) return true;
+            x += 1; // NE
+            if (IsPieceThere(x, y, board, kingPiece)) return true;
+            y += 1; // E
+            if (IsPieceThere(x, y, board, kingPiece)) return true;
+            y += 1; // SE
+            if (IsPieceThere(x, y, board, kingPiece)) return true;
+            x -= 1; // S
+            if (IsPieceThere(x, y, board, kingPiece)) return true;
+            x -= 1; // SW
+            if (IsPieceThere(x, y, board, kingPiece)) return true;
+            y -= 1; // W
+            if (IsPieceThere(x, y, board, kingPiece)) return true;
+            y -= 1; // NW
+            if (IsPieceThere(x, y, board, kingPiece)) return true;
+
+            //locs.Add(new ChessLocation(x - 1, y - 1));
+            //locs.Add(new ChessLocation(x, y - 1));
+            //locs.Add(new ChessLocation(x + 1, y - 1));
+            //locs.Add(new ChessLocation(x + 1, y));
+            //locs.Add(new ChessLocation(x + 1, y + 1));
+            //locs.Add(new ChessLocation(x, y + 1));
+            //locs.Add(new ChessLocation(x - 1, y + 1));
+            //locs.Add(new ChessLocation(x - 1, y));
+            //foreach (ChessLocation loc in locs)
+            //{
+            //    if (IsValid(loc))
+            //    {
+            //        if (board[loc] == kingPiece) // this is slow, takes 4.5% of time
+            //        {
+            //            return true;
+            //        }
+            //    }
+            //}
             return false;
         }
 
