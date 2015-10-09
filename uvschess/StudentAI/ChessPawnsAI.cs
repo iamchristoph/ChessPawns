@@ -586,8 +586,6 @@ namespace ChessPawnsAI
                 }
             }
             // Flag any moves that checkmate our opponent
-            //GetCheckMate(myMoves, board, myColor);
-            
             if (checkMoves.Count > 0)
             {
                 GetCheckMate(checkMoves, board, myColor, remaining -1);
@@ -1076,16 +1074,6 @@ namespace ChessPawnsAI
                     king = FindKing(board, color);
                 }
             }
-            // Checks for knights within range
-            if (InCheckFromKnight(board, king, color))
-            {
-                return true;
-            }
-            // Checks the tiles contiguous with the king
-            if (InCheckFromPawnOrKing(board, king, color))
-            {
-                return true;
-            }
             // Checks the diagonals for threats
             if (InCheckFromBishopOrQueen(board, king, color))
             {
@@ -1096,6 +1084,17 @@ namespace ChessPawnsAI
             {
                 return true;
             }
+            // Checks for knights within range
+            if (InCheckFromKnight(board, king, color))
+            {
+                return true;
+            }
+            // Checks the tiles contiguous with the king
+            if (InCheckFromPawnOrKing(board, king, color))
+            {
+                return true;
+            }
+
             return false;
         }
 
