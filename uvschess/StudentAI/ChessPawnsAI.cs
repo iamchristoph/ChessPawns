@@ -126,7 +126,8 @@ namespace ChessPawnsAI
 
         // Minimax with fail-soft alpha-beta pruning time limited rather than depth
         // Based on AlphaBeta and a good deal of reading on MSDN/
-        // since we dont want to infinitely recurse down just a single branch of the initial tree, we want to probably limit the depth to 3 maybe 4 if were feeling brave. 
+        // since we dont want to infinitely recurse down just a single branch of the initial tree, 
+        // we want to probably limit the depth to 3 maybe 4 if were feeling brave. 
         public int AlphaBetaTimed(ChessMove move, ChessBoard b, ChessColor color, int depth, long startTime, int alpha, int beta, bool maximizingPlayer)
         {
 
@@ -1402,20 +1403,32 @@ namespace ChessPawnsAI
             if (myColor == ChessColor.White)
             {
                 king = ChessPiece.WhiteKing;
+                // Chances are, White King is on the White side of the board
+                // so start searching there (start at rank 7 and decrement)
+                for (int i = 0; i < 8; i++)
+                {
+                    for (int j = 7; j >= 0; j--)
+                    {
+                        if (king == board[i, j])
+                        {
+                            return new ChessLocation(i, j);
+                        }
+                    }
+                }
             }
             else // black
             {
                 king = ChessPiece.BlackKing;
-            }
-            for (int i = 0; i < 8; i++)
-            {
-                for (int j = 0; j < 8; j++)
+                for (int i = 0; i < 8; i++)
                 {
-                    //ChessPiece current = board[i, j];
-                    //if (current == king)
-                    if(king == board[i,j])
+                    for (int j = 0; j < 8; j++)
                     {
-                        return new ChessLocation(i, j);
+                        //ChessPiece current = board[i, j];
+                        //if (current == king)
+                        if (king == board[i, j])
+                        {
+                            return new ChessLocation(i, j);
+                        }
                     }
                 }
             }
