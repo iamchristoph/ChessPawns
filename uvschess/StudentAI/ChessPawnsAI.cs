@@ -1074,7 +1074,7 @@ namespace ChessPawnsAI
                     king = FindKing(board, color);
                 }
             }
-            // Checks the diagonals for threats
+                        // Checks the diagonals for threats
             if (InCheckFromBishopOrQueen(board, king, color))
             {
                 return true;
@@ -1089,6 +1089,7 @@ namespace ChessPawnsAI
             {
                 return true;
             }
+
             // Checks the tiles contiguous with the king
             if (InCheckFromPawnOrKing(board, king, color))
             {
@@ -1110,24 +1111,55 @@ namespace ChessPawnsAI
             {
                 knight = ChessPiece.WhiteKnight;
             }
-            List<ChessLocation> locs = new List<ChessLocation>();
-            locs.Add(new ChessLocation(x + 2, y + 1));
-            locs.Add(new ChessLocation(x + 2, y - 1));
-            locs.Add(new ChessLocation(x - 2, y + 1));
-            locs.Add(new ChessLocation(x - 2, y - 1));
-            locs.Add(new ChessLocation(x + 1, y + 2));
-            locs.Add(new ChessLocation(x + 1, y - 2));
-            locs.Add(new ChessLocation(x - 1, y + 2));
-            locs.Add(new ChessLocation(x - 1, y - 2));
-            foreach (ChessLocation loc in locs)
+            //List<ChessLocation> locs = new List<ChessLocation>();
+            //locs.Add(new ChessLocation(x + 2, y + 1));
+            //locs.Add(new ChessLocation(x + 2, y - 1));
+            //locs.Add(new ChessLocation(x - 2, y + 1));
+            //locs.Add(new ChessLocation(x - 2, y - 1));
+            //locs.Add(new ChessLocation(x + 1, y + 2));
+            //locs.Add(new ChessLocation(x + 1, y - 2));
+            //locs.Add(new ChessLocation(x - 1, y + 2));
+            //locs.Add(new ChessLocation(x - 1, y - 2));
+            //foreach (ChessLocation loc in locs)
+            //{
+            //    if (IsValid(loc)) // Bounds checking
+            //    {
+            //        // Is there a knight there?
+            //        if (board[loc] == knight) // this is slow, takes 3.7% of time
+            //        {
+            //            return true;
+            //        }
+            //    }
+            //}
+
+            // Start in northeast corner (1:00) and go around
+            x += 1; y -= 2;
+            if (IsPieceThere(x, y, board, knight)) return true;
+            x += 1; y += 1;
+            if (IsPieceThere(x, y, board, knight)) return true;
+            y += 2;
+            if (IsPieceThere(x, y, board, knight)) return true;
+            x -= 1; y += 1;
+            if (IsPieceThere(x, y, board, knight)) return true;
+            x -= 2;
+            if (IsPieceThere(x, y, board, knight)) return true;
+            x -= 1; y -= 1;
+            if (IsPieceThere(x, y, board, knight)) return true;
+            y -= 2;
+            if (IsPieceThere(x, y, board, knight)) return true;
+            x += 1; y -= 1;
+            if (IsPieceThere(x, y, board, knight)) return true;
+
+            return false;
+        }
+
+        private bool IsPieceThere(int x, int y, ChessBoard board, ChessPiece piece)
+        {
+            if (IsValid(x, y))
             {
-                if (IsValid(loc)) // Bounds checking
+                if (board[x,y] == piece)
                 {
-                    // Is there a knight there?
-                    if (board[loc] == knight) // this is slow, takes 3.7% of time
-                    {
-                        return true;
-                    }
+                    return true;
                 }
             }
             return false;
