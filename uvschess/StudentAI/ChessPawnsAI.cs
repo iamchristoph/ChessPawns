@@ -184,13 +184,6 @@ namespace ChessPawnsAI
             }
         }
 
-        //public int EvaluateBoard(ChessMove move, ChessBoard b, ChessColor color)
-        //{
-        //    ChessBoard board = b.Clone();
-        //    board.MakeMove(move);
-        //    return EvaluateBoard(board, color);
-        //}
-
         // A higher (more positive) integer means a better move.
         public int EvaluateBoard(ChessMove move, ChessBoard b, ChessColor color)
         {
@@ -472,11 +465,15 @@ namespace ChessPawnsAI
         public List<ChessMove> GetAllMoves(ChessBoard board, ChessColor myColor, int remaining = 3, bool lookingForCheckmate = false)
         {
             List<ChessMove> moves = new List<ChessMove>(); // a list to hold our moves
+            // king locations are needed to check for check and checkmate
+            // moved here so it is performed less
+            ChessLocation king = FindKing(board, myColor);
+            ChessLocation otherKing = FindKing(board, OtherColor(myColor));
             for (int i = 0; i < 8; i++ )
             {
                 for (int j = 0; j < 8; j++)
                 {
-                    moves.AddRange(GetMove(board, new ChessLocation(i, j), myColor, remaining)); // for each location add the valid moves
+                    moves.AddRange(GetMove(board, new ChessLocation(i, j), myColor, king, otherKing, remaining)); // for each location add the valid moves
                     if(lookingForCheckmate && moves.Count > 0)
                     {
                         return moves;
@@ -488,7 +485,8 @@ namespace ChessPawnsAI
         }
 
 
-        public List<ChessMove> GetMove(ChessBoard board, ChessLocation location, ChessColor myColor, int remaining = 3)
+        public List<ChessMove> GetMove(ChessBoard board, ChessLocation location, ChessColor myColor, 
+                    ChessLocation king, ChessLocation otherKing, int remaining = 3)
         {
             ChessPiece myPiece = board[location];
             //init a new location so we can have somethign to write to. 
@@ -567,11 +565,7 @@ namespace ChessPawnsAI
                         }
                 }
             }
-            
-            // (If we need more speed, move these methods up to GetAllMoves to avoid repeating it too much--
-            // king location is needed to check for check)
-            ChessLocation king = FindKing(board, myColor);
-            ChessLocation otherKing = FindKing(board, OtherColor(myColor));
+
             // Eliminate any moves that put us into check
             List<ChessMove> myMoves = new List<ChessMove>();
             for (int i = 0; i < moves.Count; ++i)
