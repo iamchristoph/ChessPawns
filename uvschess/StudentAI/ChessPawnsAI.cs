@@ -15,9 +15,9 @@ namespace ChessPawnsAI
         public string Name
         {
 #if DEBUG
-            get { return "ChessPawnsAI"; }
+            get { return "ChessPawnsAI d2fs"; }
 #else
-            get { return "ChessPawnsAI"; }
+            get { return "ChessPawnsAI d2fs"; }
 #endif
         }
         /// <summary>
@@ -58,11 +58,13 @@ namespace ChessPawnsAI
                 count++;
                 if ((DateTime.Now.Ticks - start) / TimeSpan.TicksPerMillisecond > 4000)
                 {                    
-                    depthToSearch = 2;                    
+                    depthToSearch = 2;
+                    Log("depth cutback 2");
                 }
                 if ((DateTime.Now.Ticks - start) / TimeSpan.TicksPerMillisecond > 5000)
                 {
                     depthToSearch = 1;
+                    Log("depth cutback 1");
                 }
                 //move.ValueOfMove = AlphaBeta(move, board, myColor, 2, int.MaxValue, int.MinValue, true);
                 //Log(stopwatch.ElapsedMilliseconds.ToString());
@@ -99,28 +101,28 @@ namespace ChessPawnsAI
             if (maximizingPlayer)
             {
                 //    Log("Getting max alpha = " + alpha);
-                bestVal = int.MaxValue;
+                bestVal = int.MinValue;
                 foreach (ChessMove child in children)
                 {
-                    bestVal = Math.Min(bestVal, AlphaBeta(child, board, color, depth - 1, alpha, beta, false));
-                    alpha = Math.Min(alpha, bestVal);
+                    bestVal = Math.Max(bestVal, AlphaBeta(child, board, color, depth - 1, alpha, beta, false));
+                    alpha = Math.Max(alpha, bestVal);
                     if (beta >= alpha)
                         break;
                 }
-                return alpha;
+                return bestVal;
             }
             else
             {
                 //    Log("Getting min beta = " + beta);
-                bestVal = int.MinValue;
+                bestVal = int.MaxValue;
                 foreach (ChessMove child in children)
                 {
-                    bestVal = Math.Max(bestVal, AlphaBeta(child, board, color, depth - 1, alpha, beta, true));
-                    beta = Math.Max(beta, bestVal);
+                    bestVal = Math.Min(bestVal, AlphaBeta(child, board, color, depth - 1, alpha, beta, true));
+                    beta = Math.Min(beta, bestVal);
                     if (beta >= alpha)
                         break;
                 }
-                return beta;
+                return bestVal;
             }
         }
 
