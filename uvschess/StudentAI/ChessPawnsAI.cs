@@ -53,12 +53,12 @@ namespace ChessPawnsAI
             //im an idiot. 
             long start = DateTime.Now.Ticks;
             int count = 0;
-            int originalDepth = 3; // mostly for debugging purposes
+            int originalDepth = 5; // mostly for debugging purposes
             int depthToSearch = originalDepth; 
             
             foreach (ChessMove move in moves)
             {
-                move.ValueOfMove = AlphaBeta(move, board, myColor, depthToSearch, int.MaxValue, int.MinValue, true);
+                move.ValueOfMove = AlphaBeta(move, board, myColor, depthToSearch, int.MaxValue, int.MinValue, false);
                 count++;
                 if ((DateTime.Now.Ticks - start) / TimeSpan.TicksPerMillisecond > 4000)
                 {                    
@@ -73,9 +73,9 @@ namespace ChessPawnsAI
                 //move.ValueOfMove = AlphaBeta(move, board, myColor, 2, int.MaxValue, int.MinValue, true);
                 //Log(stopwatch.ElapsedMilliseconds.ToString());
             }
-            
-            List<ChessMove> bestMoves = GetHighestMoves(moves);
-            /*List<ChessMove> bestMoves;
+
+            List<ChessMove> bestMoves;
+
             if (oldHeuristic)
             {
                 bestMoves = GetLowestMoves(moves);
@@ -84,7 +84,7 @@ namespace ChessPawnsAI
             {
                 bestMoves = GetHighestMoves(moves);
             }
-            */
+
             if(depthToSearch == originalDepth)
             {
                 Log("Went the full depth (" + originalDepth + ")");
@@ -117,12 +117,11 @@ namespace ChessPawnsAI
             board.MakeMove(move);
 
             int hash = board.GetHashCode();
-            
             if (memoDict.ContainsKey(hash))
             {
                  return memoDict[hash];
             }
-            
+
             color = OtherColor(color);
             List<ChessMove> children = GetAllMoves(board, color);
             if (maximizingPlayer)
