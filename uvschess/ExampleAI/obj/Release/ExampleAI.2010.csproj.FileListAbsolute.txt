@@ -1,5 +1,0 @@
-C:\Users\Travis\Documents\Programming\School\CS 4470 - AI\Chess\ChessPawns\uvschess\Framework\bin\Release\ExampleAI.dll
-C:\Users\Travis\Documents\Programming\School\CS 4470 - AI\Chess\ChessPawns\uvschess\Framework\bin\Release\ExampleAI.pdb
-C:\Users\Travis\Documents\Programming\School\CS 4470 - AI\Chess\ChessPawns\uvschess\ExampleAI\obj\Release\ExampleAI.2010.csprojResolveAssemblyReference.cache
-C:\Users\Travis\Documents\Programming\School\CS 4470 - AI\Chess\ChessPawns\uvschess\ExampleAI\obj\Release\ExampleAI.dll
-C:\Users\Travis\Documents\Programming\School\CS 4470 - AI\Chess\ChessPawns\uvschess\ExampleAI\obj\Release\ExampleAI.pdb

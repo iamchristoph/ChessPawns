@@ -7,8 +7,6 @@ namespace ChessPawnsAI
 {
     public class ChessPawnsAI : IChessAI
     {
-        Dictionary<int, int> memoDict = new Dictionary<int, int>(); // Uses the hash of the board as the key, the alphabeta as the value
-
         #region IChessAI Members that are implemented by the Student
 
         /// <summary>
@@ -53,9 +51,7 @@ namespace ChessPawnsAI
             //im an idiot. 
             long start = DateTime.Now.Ticks;
             int count = 0;
-            int originalDepth = 30; // mostly for debugging purposes
-            int depthToSearch = originalDepth; 
-            
+            int depthToSearch = 2; 
             foreach (ChessMove move in moves)
             {
                 move.ValueOfMove = AlphaBeta(move, board, myColor, depthToSearch, int.MaxValue, int.MinValue, true);
@@ -75,10 +71,7 @@ namespace ChessPawnsAI
             }
 
             List<ChessMove> bestMoves = GetHighestMoves(moves);
-            if(depthToSearch == originalDepth)
-            {
-                Log("Went the full depth (" + originalDepth + ")");
-            }
+
             Log("There are " + moves.Count + " possible moves, with " + bestMoves.Count + " moves that seem decent.");
 
             Random random = new Random();
@@ -93,12 +86,6 @@ namespace ChessPawnsAI
 #if DEBUG
             //Log("Depth = " + depth + ", alpha = " + alpha + ", beta = "+ beta);
 #endif
-            int hash = b.GetHashCode();
-            if (memoDict.ContainsKey(hash))
-            {
-                return memoDict[hash];
-            }
-
             //Log(stopwatch.ElapsedTicks.ToString());
             int bestVal = 0;
             // if depth is 0 or node is a terminal node
@@ -122,7 +109,6 @@ namespace ChessPawnsAI
                     if (beta >= alpha)
                         break;
                 }
-                memoDict[hash] = bestVal;
                 return bestVal;
             }
             else
@@ -136,7 +122,6 @@ namespace ChessPawnsAI
                     if (beta >= alpha)
                         break;
                 }
-                memoDict[hash] = bestVal;
                 return bestVal;
             }
         }
