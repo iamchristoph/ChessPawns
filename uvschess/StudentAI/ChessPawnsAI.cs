@@ -36,10 +36,7 @@ namespace ChessPawnsAI
             //return new ChessMove(new ChessLocation(0, 0), new ChessLocation(0, 0), ChessFlag.);
             //move = GetStrategicMove(board, myColor);
             bool oldHeuristic = false;
-            //move = GetLookAheadMove(board, myColor, oldHeuristic, 0);
-            //move = GetLookAheadMove(board, myColor, oldHeuristic, 5);
-
-            // was trying to loose, something was wrong with the implementation...
+            // move = GetLookAheadMove(board, myColor, oldHeuristic, 0);
             move = GetAlphaBetaMove(board, myColor, oldHeuristic);
 
             return move;
@@ -56,7 +53,7 @@ namespace ChessPawnsAI
             //im an idiot. 
             long start = DateTime.Now.Ticks;
             int count = 0;
-            int originalDepth = 4; // mostly for debugging purposes
+            int originalDepth = 3; // mostly for debugging purposes
             int depthToSearch = originalDepth; 
             
             foreach (ChessMove move in moves)
@@ -110,27 +107,16 @@ namespace ChessPawnsAI
 
             //Log(stopwatch.ElapsedTicks.ToString());
             int bestVal = 0;
-            int hash;
             // if depth is 0 or node is a terminal node
             //stopwatch will check to see how much time has passed since the get move process was started.  
             if ((depth == 0) || (move.Flag == ChessFlag.Checkmate))
             {
-                hash = b.GetHashCode();
-                if (memoDict.ContainsKey(hash))
-                {
-                    return memoDict[hash];
-                }
-                else
-                {
-                    int value = EvaluateBoard(move, b, color);
-                    memoDict[hash] = value;
-                    return value;
-                }
+                return EvaluateBoard(move, b, color);
             }
             ChessBoard board = b.Clone();
             board.MakeMove(move);
 
-            hash = board.GetHashCode();
+            int hash = board.GetHashCode();
             
             if (memoDict.ContainsKey(hash))
             {
@@ -402,17 +388,7 @@ namespace ChessPawnsAI
                 {
                     ChessBoard tBoard = board.Clone();
                     tBoard.MakeMove(move);
-
-                    int hash = tBoard.GetHashCode();
-                    if (memoDict.ContainsKey(hash))
-                    {
-                        move.ValueOfMove = memoDict[hash];
-                    }
-                    else
-                    {
-                        move.ValueOfMove -= (GetLookAheadMove(tBoard, OtherColor(myColor), oldHeuristic, --depth).ValueOfMove);
-                        memoDict[hash] = move.ValueOfMove;
-                    }
+                    move.ValueOfMove -= (GetLookAheadMove(tBoard, OtherColor(myColor), oldHeuristic, --depth).ValueOfMove);
                 }
             }
             else
@@ -421,17 +397,7 @@ namespace ChessPawnsAI
                 {
                     ChessBoard tBoard = board.Clone();
                     tBoard.MakeMove(move);
-
-                    int hash = tBoard.GetHashCode();
-                    if (memoDict.ContainsKey(hash))
-                    {
-                        move.ValueOfMove = memoDict[hash];
-                    }
-                    else
-                    {
-                        move.ValueOfMove -= (GetStrategicMove(tBoard, OtherColor(myColor), oldHeuristic).ValueOfMove);
-                        memoDict[hash] = move.ValueOfMove;
-                    }
+                    move.ValueOfMove -= (GetStrategicMove(tBoard, OtherColor(myColor), oldHeuristic).ValueOfMove);
                 }
             }
             List<ChessMove> bestMoves;
@@ -445,7 +411,7 @@ namespace ChessPawnsAI
                 bestMoves = GetHighestMoves(moves);
             }
 
-            Log("Depth " + depth + ", there are " + moves.Count + " possible moves, with " + bestMoves.Count + " moves that seem decent.");
+            Log("There are " + moves.Count + " possible moves, with " + bestMoves.Count + " moves that seem decent.");
 
             Random random = new Random();
             int randInt = random.Next(bestMoves.Count);
