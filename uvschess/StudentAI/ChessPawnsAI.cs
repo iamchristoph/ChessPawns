@@ -7,7 +7,7 @@ namespace ChessPawnsAI
 {
     public class ChessPawnsAI : IChessAI
     {
-        Dictionary<int, int> memoDict = new Dictionary<int, int>(); // Uses the hash of the board as the key, the alphabeta as the value. 
+        Dictionary<int, int> memoDict = new Dictionary<int, int>(); // Uses the hash of the board as the key, the alphabeta as the value
 
         #region IChessAI Members that are implemented by the Student
 
@@ -53,12 +53,12 @@ namespace ChessPawnsAI
             //im an idiot. 
             long start = DateTime.Now.Ticks;
             int count = 0;
-            int originalDepth = 5; // mostly for debugging purposes
+            int originalDepth = 30; // mostly for debugging purposes
             int depthToSearch = originalDepth; 
             
             foreach (ChessMove move in moves)
             {
-                move.ValueOfMove = AlphaBeta(move, board, myColor, depthToSearch, int.MaxValue, int.MinValue, false);
+                move.ValueOfMove = AlphaBeta(move, board, myColor, depthToSearch, int.MaxValue, int.MinValue, true);
                 count++;
                 if ((DateTime.Now.Ticks - start) / TimeSpan.TicksPerMillisecond > 4000)
                 {                    
@@ -74,17 +74,7 @@ namespace ChessPawnsAI
                 //Log(stopwatch.ElapsedMilliseconds.ToString());
             }
 
-            List<ChessMove> bestMoves;
-
-            if (oldHeuristic)
-            {
-                bestMoves = GetLowestMoves(moves);
-            }
-            else
-            {
-                bestMoves = GetHighestMoves(moves);
-            }
-
+            List<ChessMove> bestMoves = GetHighestMoves(moves);
             if(depthToSearch == originalDepth)
             {
                 Log("Went the full depth (" + originalDepth + ")");
@@ -103,7 +93,11 @@ namespace ChessPawnsAI
 #if DEBUG
             //Log("Depth = " + depth + ", alpha = " + alpha + ", beta = "+ beta);
 #endif
-            
+            int hash = b.GetHashCode();
+            if (memoDict.ContainsKey(hash))
+            {
+                return memoDict[hash];
+            }
 
             //Log(stopwatch.ElapsedTicks.ToString());
             int bestVal = 0;
@@ -115,13 +109,6 @@ namespace ChessPawnsAI
             }
             ChessBoard board = b.Clone();
             board.MakeMove(move);
-
-            int hash = board.GetHashCode();
-            if (memoDict.ContainsKey(hash))
-            {
-                 return memoDict[hash];
-            }
-
             color = OtherColor(color);
             List<ChessMove> children = GetAllMoves(board, color);
             if (maximizingPlayer)
